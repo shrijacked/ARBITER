@@ -1,0 +1,25 @@
+# Learning book build intermediates (the master PDF is tracked; build/ is not)
+learning/build/
+
+# Secrets and environment
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
+# Machine-local editor/agent settings
+.claude/settings.local.json
+
+# OS
+.DS_Store
