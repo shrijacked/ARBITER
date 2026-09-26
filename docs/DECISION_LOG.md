@@ -151,8 +151,53 @@ Design assumptions A1–A7 are defined in [ARCHITECTURE.md §12](ARCHITECTURE.md
 
 ---
 
-## 10. Change log
+## 11. Amendments — 2026-09-27 (product phase begins)
+
+These rows amend the register after the user chose to build a product. They do **not** rewrite anything above; they supersede specific earlier rows where noted. The operational plan is now [PLAN.md](PLAN.md); this register stays the source of truth for *why* we believe what we believe.
+
+### 11.1 New decisions
+
+| ID | Date | Decision | Rationale | Supersedes | Reversible? |
+|---|---|---|---|---|---|
+| D11 | 2026-09-27 | **The product is an open-source Python decision-layer SDK** (working name `decision-layer`): typed, calibrated decision points added to an existing LLM agent, with a swappable engine (Jev default) and `calibrate`/`eval`/`report`/`replay` tooling. MVP limited to DP2 + DP4 on one host framework. | User chose product option A over a full framework (B), a browser agent (C), or an observability tool (D), after alternatives were presented. Turns the research experiments into product validation; swappable engine survives a bad Jev result. | **D1** (harness-only scope) and **D9** (defer library until after G2). **D8** (no implementation in research phase) is closed: the research phase ended 2026-09-20 and implementation is authorized. | Yes, at any gate. |
+| D12 | 2026-09-27 | **[PLAN.md](PLAN.md) is the operational source of truth.** The three research docs (RESEARCH, ARCHITECTURE, IMPLEMENTATION_PLAN) are frozen; this DECISION_LOG stays living (append-only). | One place to track what/when/status without editing the research record. | — | Yes. |
+| D13 | 2026-09-27 | **Python 3.12 via `uv`.** | The Jev SDK needs Python >= 3.10; the machine has 3.9.6. `uv` gives a clean, pinned interpreter. Installed at PT-0.8 (touchpoint H3), not before. | — | Yes. |
+| D14 | 2026-09-27 | **The learning book is LaTeX built with Tectonic, and the master PDF is tracked in git** at `learning/jev-learning-master.pdf`, rebuilt as work progresses. | User explicitly asked for a professional, well-formatted LaTeX learning doc with a master PDF, updated side by side. Tectonic is installed (no MacTeX). Tradeoff: repo grows ~1-3 MB per rebuild commit; revisit Git LFS once there is a remote (RISK-P5). The DX review suggested build-in-CI instead, but the user's explicit request wins. | — | Yes (could move PDF to CI/LFS later). |
+| D15 | 2026-09-27 | **Working package name is `decision-layer`** (import `decision_layer`) until the user picks a final name before the first publish (Q16). | Placeholder so work can proceed; examples flagged as name-churn risk (EF-DX8-adjacent). | — | Yes (Q16). |
+| D16 | 2026-09-27 | **Elevate the evidence artifact to a co-headline deliverable** (a pre-registered, reproducible study with trajectory-checkpoint calibration + released dataset), alongside the SDK. | The CEO plan review argued the research's own conclusion is that the moat is the evidence, not another integration. Keeps D11's product but addresses the strongest strategic risk without abandoning it. Speed-to-evidence tracked as RISK-P4; the fuller challenge is Q17 for the user to reweight. | — | Yes (Q17). |
+
+### 11.2 New open questions
+
+| ID | Question | How to resolve | Phase |
+|---|---|---|---|
+| Q11 | Which LLM provider for the reasoning component and the same-interface baseline (logprob availability differs)? | Pick before M2 (touchpoint H2) | M2 |
+| Q12 | Does the Python SDK work through the Vercel AI Gateway, or is a direct TypeSafe key required? | PT-2.1 (T0.1) | M2 |
+| Q13 | Who is the second human labeler for 200-500 ambiguous decisions? | Before M5 (touchpoint H6) | M5 |
+| Q14 | License: MIT or Apache-2.0? | Before M4/M7 (touchpoint H8) | M4/M7 |
+| Q15 | Release a no-claims public alpha (M4) before the evidence, or hold to the M7 evidence release? | Before M4 | M3/M4 |
+| Q16 | Final package name (working name `decision-layer`)? | Before M4/M7 (touchpoint H8) | M4/M7 |
+| Q17 | **User Challenge (CEO plan review):** make the benchmark/dataset/methodology the headline and the SDK the instrument; consider racing a minimal pre-registered study to publication first, a Laya (open-weights) default, an encoder-first "label bootstrap" framing, and contributing the eval/calibrate tooling into LangChain/Pydantic AI instead of shipping standalone. Not auto-decided. Current stance: keep the SDK (D11) but elevate evidence (D16). | User decision | ongoing |
+
+### 11.3 New product risks (research risks R1-R10 in §7 still hold)
+
+| ID | Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|---|
+| RISK-P1 | Vendors ship calibrated gating natively | Medium | High | Differentiate on evidence + calibrate-from-logs, not the integration; stay engine-agnostic |
+| RISK-P2 | Host-framework API change breaks the adapter | Medium | Medium | One host in v0.1; thin adapter seam; CI against a pinned framework version |
+| RISK-P3 | Users misuse the SDK as an authorization gate | Medium | High | Enforced fail-closed + DP-output-enum (EF-16); README warning; `data_egress_ack` gate |
+| RISK-P4 | Someone publishes the controlled study first | High | High | Prioritize a minimal pre-registered study; time-to-credible-evidence as primary KPI |
+| RISK-P5 | Tracking the master PDF bloats the repo | Low | Low | Accepted per D14; revisit Git LFS once there is a remote |
+| RISK-P6 | Docs-heavy start yields no evidence for weeks | Medium | Medium | M0 docs are one session; M1 offline core starts immediately, needs no keys |
+
+### 11.4 Data-quality note (frozen doc, not edited)
+
+[RESEARCH.md](RESEARCH.md) lines 159-169 contain character-encoding corruption: `x`, `->`, `>=`, and en dashes render as garbled bytes, and three dollar figures are corrupted to `-e.0645`, `-e.0003`, `-e.00004`. The source doc is frozen and not edited. Consequence: those three dollar values are **not cited** in the learning book or any deliverable until re-verified against the source cookbooks at PT-2.1.
+
+---
+
+## 12. Change log
 
 | Date | Change |
 |---|---|
 | 2026-09-20 | Initial register created from the research phase. Hypotheses H0–H5, assumptions R1–R5, decisions D1–D10, questions Q1–Q10, risks R1–R10. |
+| 2026-09-27 | Product phase begins. Added decisions D11-D16 (D11 supersedes D1/D9 and closes D8), open questions Q11-Q17 (incl. the CEO User Challenge), product risks RISK-P1..P6, and a data-quality note on RESEARCH.md lines 159-169. Operational plan is now [PLAN.md](PLAN.md). |
