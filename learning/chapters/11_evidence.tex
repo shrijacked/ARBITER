@@ -1,0 +1,103 @@
+\chapter{Evidence so far}
+\label{ch:evidence}
+
+This chapter summarizes what independent testers found in the days after Jev's launch. All of
+it is early, small, and unreproduced, so treat it as indicative, not settled. We have run no
+experiments of our own yet, so there are no \MEAS{} labels here.
+
+\section{Accuracy: competitive on short tasks, weak on long ones}
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}
+\begin{axis}[width=12cm,height=5.4cm,ybar,bar width=8pt,
+  symbolic x coords={Banking77,CLINC150,Phishing,Phishing+decomp},
+  xtick=data, x tick label style={font=\scriptsize},
+  ylabel={accuracy}, ymin=0, ymax=1.05, legend pos=south west, legend cell align=left,
+  enlarge x limits=0.18, grid=both, grid style={clExternal!20},
+  nodes near coords, every node near coord/.append style={font=\tiny, rotate=90, anchor=west}]
+  \addplot[fill=clModel!55, draw=clModel] coordinates
+    {(Banking77,0.832)(CLINC150,0.870)(Phishing,0.626)(Phishing+decomp,0.950)};
+  \addlegendentry{Jev}
+  \addplot[fill=clExternal!40, draw=clExternal] coordinates
+    {(Banking77,0.875)(CLINC150,0.915)(Phishing,0.813)(Phishing+decomp,0.932)};
+  \addlegendentry{comparator LLM}
+  % Trained-encoder numbers exist only for Banking77 (bge-small+LR) and phishing (4B LoRA);
+  % there is no published CLINC150 encoder figure, so that bar is deliberately omitted.
+  \addplot[fill=clBackend!45, draw=clBackend] coordinates
+    {(Banking77,0.933)(Phishing,0.974)(Phishing+decomp,0.974)};
+  \addlegendentry{trained encoder}
+\end{axis}
+\end{tikzpicture}
+\caption{Jev is within a few points of the comparator LLM on short-input intent
+classification, clearly below on whole-document phishing, and recovers most of the gap when
+the judgment is decomposed. The comparator is the frontier model GPT-5.6 Terra on
+Banking77/CLINC150 and Claude Haiku 4.5 on phishing; the encoder is bge-small+logistic
+regression on Banking77 and a 4B LoRA model on phishing (no published CLINC150 encoder
+number, so that bar is omitted). A trained in-domain encoder tends to win when labels
+exist.\datalabel{Reported by jev-baselines-eval and jev-phishing-bench}~\citep{jev_baselines_eval,jev_phishing_bench}}
+\label{fig:accuracy}
+\end{figure}
+
+\section{Latency: fast, but with tails under load}
+
+Independent medians cluster around 0.24--0.9\,s per call depending on location and
+concurrency, with rare tails of tens of seconds at high concurrency~\citep{aman_kumar}. Fast
+enough to ask every step; the tails are why the SDK must be complete without Jev.
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}
+\begin{axis}[width=10cm,height=4.8cm,ybar,bar width=12pt,
+  symbolic x coords={p50 low conc.,p95 conc.4,tail conc.100},
+  xtick=data, x tick label style={font=\scriptsize},
+  ylabel={latency (s)}, ymin=0, ymax=20, enlarge x limits=0.3,
+  grid=both, grid style={clExternal!20}, nodes near coords,
+  every node near coord/.append style={font=\tiny}]
+  \addplot[fill=clAccent!50, draw=clAccent] coordinates
+    {(p50 low conc.,0.4)(p95 conc.4,0.9)(tail conc.100,18)};
+\end{axis}
+\end{tikzpicture}
+\caption{Illustrative latency profile: sub-second typical, multi-second tails under heavy
+concurrency.\datalabel{Illustrative; ranges reported by Aman Kumar}~\citep{aman_kumar}}
+\label{fig:latency}
+\end{figure}
+
+\section{Calibration}
+
+The out-of-distribution ECE result (Figure~\ref{fig:ece}) is the single most important
+calibration finding: near the noise floor in distribution, about 4.4\(\times\) the floor out
+of distribution, and type-dependent (Choice/Score overconfident, Noul
+underconfident)~\citep{jev_ood_calibration}. Recalibration with a few hundred labels brings
+ECE back toward $0.01$~\citep{jev_calibration_anthus}.
+
+\section{Where the hypotheses stand}
+
+\begin{figure}[h]\centering
+\small
+\begin{tabular}{@{}clp{6.2cm}@{}}
+\toprule
+ID & Hypothesis (abridged) & Status \\
+\midrule
+H0 & separating decision from reasoning helps & partially supported, unproven end-to-end \\
+H1 & Jev picks the right tool (DP2) cheaply & plausible, vendor-supported, unmeasured on real catalogs \\
+H2 & inserting it lowers cost/task w/o hurting pass\^{}k & \textbf{open --- the MVP hypothesis} \\
+H3 & Jev judges progress (DP4) & untested \\
+H4 & probabilities gate well after recalibration & partially supported \\
+H5 & the benefit is specific to Jev, not typed points & open; ARM-A2 exists to test it \\
+\bottomrule
+\end{tabular}
+\caption{Hypothesis status at the start of the build. The gates G0/G1/G2 are designed to move
+these.\datalabel{Reported by docs/DECISION\_LOG.md \S1}}
+\label{fig:hypotheses}
+\end{figure}
+
+\begin{whyhere}
+The honest expected outcome, from the whole evidence base, is ``cheaper decisions at equal or
+slightly lower accuracy, useful after recalibration.'' The project is built so that this
+result, if it holds, is a \emph{success}: it is exactly the controlled evidence nobody has
+published, and the SDK ships it reproducibly.
+\end{whyhere}
+
+\begin{checkbox}
+Which single hypothesis, if it failed at gate G2, would most change the product story, and why?
+(Appendix~\ref{app:answers}.)
+\end{checkbox}

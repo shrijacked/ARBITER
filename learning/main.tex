@@ -1,0 +1,80 @@
+% main.tex — Jev learning book (master document).
+% Build: make pdf   (Tectonic -> build/main.pdf -> jev-learning-master.pdf)
+% Verify: make verify
+\documentclass[11pt,openright]{scrbook}
+
+\input{preamble}
+
+\title{\bfseries The Jev Decision-Layer Handbook\\[0.4em]
+  \large A build-along guide to calibrated decisions for LLM agents}
+\author{decision-layer project}
+\date{Living document. Last built: \today}
+
+\begin{document}
+
+\frontmatter
+\begin{titlepage}
+\centering
+\vspace*{2.2cm}
+{\Huge\bfseries The Jev Decision-Layer Handbook\par}
+\vspace{0.8cm}
+{\Large A build-along guide to calibrated decisions for LLM agents\par}
+\vspace{1.4cm}
+\begin{tikzpicture}
+  \node[frontend] (agent) {LLM agent};
+  \node[model, right=16mm of agent] (jev) {Jev\\decision engine};
+  \node[backend, right=16mm of jev] (policy) {policy\\act/narrow/escalate};
+  \draw[flow] (agent) -- node[flowlabel]{state} (jev);
+  \draw[flow] (jev) -- node[flowlabel]{prob.} (policy);
+  \draw[flow] (policy.south) to[bend right=30] node[flowlabel]{narrow} (agent.south);
+\end{tikzpicture}
+\vfill
+{\large A living companion to \texttt{docs/PLAN.md} and the four research docs.\par}
+{\itshape Every figure states where its numbers come from. No illustrative value is a result.\par}
+\vspace{1.2cm}
+{\large Last built: \today\par}
+\end{titlepage}
+
+\tableofcontents
+\listoffigures
+
+\chapter*{How to read this book (by goal)}
+\addcontentsline{toc}{chapter}{How to read this book (by goal)}
+\input{chapters/00_howto}
+
+\mainmatter
+
+\part{The big picture}
+\input{chapters/01_what_we_are_building}
+\input{chapters/02_roadmap}
+
+\part{Foundations}
+\input{chapters/03_llm_agents}
+\input{chapters/04_jev_system_one}
+\input{chapters/05_calibration}
+\input{chapters/06_routers_cascades_verifiers}
+\input{chapters/07_evaluating_agents}
+
+\part{The system}
+\input{chapters/08_decision_points}
+\input{chapters/09_sdk_architecture}
+\input{chapters/10_engineering_practices}
+
+\part{Evidence so far}
+\input{chapters/11_evidence}
+
+\part{Build log}
+\input{chapters/12_build_log}
+
+\appendix
+\part{Appendices}
+\input{chapters/A1_glossary}
+\input{chapters/A2_formula_sheet}
+\input{chapters/A3_answers}
+\input{chapters/A4_source_map}
+
+\backmatter
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

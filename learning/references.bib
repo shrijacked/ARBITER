@@ -1,0 +1,178 @@
+% Sources cited by the learning book. Drawn from the four research docs.
+% URLs are kept in the note/howpublished fields; access dates are the research date.
+
+@misc{typesafe_models,
+  title = {Models — TypeSafe AI documentation (Jev)},
+  author = {{TypeSafe AI}},
+  year = {2026},
+  howpublished = {\url{https://docs.typesafe.ai/models}},
+  note = {jev-1.13.0; \$0.042 per million input tokens, output free; 64k tokens/request, 32k for state + longest question. Accessed 2026-09-20.}
+}
+
+@misc{typesafe_systemone,
+  title = {System One — TypeSafe AI documentation},
+  author = {{TypeSafe AI}},
+  year = {2026},
+  howpublished = {\url{https://docs.typesafe.ai/concepts/system-one}},
+  note = {Text-only input; does not generate text. Accessed 2026-09-20.}
+}
+
+@misc{typesafe_primitives,
+  title = {Primitives: Choice, Score, Noul — TypeSafe AI documentation},
+  author = {{TypeSafe AI}},
+  year = {2026},
+  howpublished = {\url{https://docs.typesafe.ai/primitives}},
+  note = {Choice <= 255 options; Score 2--10 levels; Noul probability. Accessed 2026-09-20.}
+}
+
+@misc{typesafe_confidence,
+  title = {Confidence — TypeSafe AI documentation},
+  author = {{TypeSafe AI}},
+  year = {2026},
+  howpublished = {\url{https://docs.typesafe.ai/confidence}},
+  note = {Confidence is a statistic of the probability distribution; formula undisclosed. Accessed 2026-09-20.}
+}
+
+@misc{typesafe_jaggedness,
+  title = {Jev 1.13 jaggedness (known issues) — TypeSafe AI documentation},
+  author = {{TypeSafe AI}},
+  year = {2026},
+  howpublished = {\url{https://docs.typesafe.ai/model-jaggedness/jev-1.13}},
+  note = {Nine documented failure modes with workarounds. Accessed 2026-09-20.}
+}
+
+@misc{jev_ood_calibration,
+  title = {jev-ood-calibration: out-of-distribution calibration of Jev},
+  author = {{scienthoon}},
+  year = {2026},
+  howpublished = {\url{https://github.com/scienthoon/jev-ood-calibration}},
+  note = {In-distribution ECE near noise floor; OOD ECE 0.107 vs 0.024 floor; type-dependent miscalibration. Accessed 2026-09-20.}
+}
+
+@misc{jev_calibration_anthus,
+  title = {Jev-Calibration: recalibration with isotonic regression},
+  author = {{AnthusAI}},
+  year = {2026},
+  howpublished = {\url{https://github.com/AnthusAI/Jev-Calibration}},
+  note = {8,801 sentiment examples; isotonic regression reduces ECE to ~0.008--0.016; ~100 labels reach ECE 0.048. Accessed 2026-09-20.}
+}
+
+@misc{jev_baselines_eval,
+  title = {jev-baselines-eval: pre-registered intent-classification baselines},
+  author = {{ickma2311}},
+  year = {2026},
+  howpublished = {\url{https://github.com/ickma2311/jev-baselines-eval}},
+  note = {Banking77 0.832, CLINC150 0.870; encoder 0.933 on Banking77; confidence saturates at 1.0. Accessed 2026-09-20.}
+}
+
+@misc{jev_phishing_bench,
+  title = {jev-phishing-bench: phishing detection benchmark},
+  author = {{anisselbd}},
+  year = {2026},
+  howpublished = {\url{https://github.com/anisselbd/jev-phishing-bench}},
+  note = {Jev 62.6\% vs Claude Haiku 4.5 81.3\% on 2,000 emails; decomposition + logistic regression reaches 95.0\%. Accessed 2026-09-20.}
+}
+
+@misc{aman_kumar,
+  title = {Jev, measured: classifier or filter?},
+  author = {Kumar, Aman},
+  year = {2026},
+  howpublished = {\url{https://amankumar.ai/blogs/jev-measured}},
+  note = {Latency and accuracy measurements; P<0.1 was 99.7\% correct on 82\% of items. Accessed 2026-09-20.}
+}
+
+@misc{good_start_labs,
+  title = {Verification is the bottleneck},
+  author = {{Good Start Labs}},
+  year = {2026},
+  howpublished = {\url{https://goodstartlabs.com/research/verification-is-the-bottleneck}},
+  note = {6,003 rubric checks; 91.5\% agreement with Claude Fable 5.1; agreement, not human ground truth. Accessed 2026-09-20.}
+}
+
+@article{routellm,
+  title = {RouteLLM: Learning to Route LLMs with Preference Data},
+  author = {Ong, Isaac and others},
+  year = {2024},
+  journal = {arXiv preprint arXiv:2406.18665},
+  note = {\url{https://arxiv.org/abs/2406.18665}}
+}
+
+@article{frugalgpt,
+  title = {FrugalGPT: How to Use Large Language Models While Reducing Cost and Improving Performance},
+  author = {Chen, Lingjiao and Zaharia, Matei and Zou, James},
+  year = {2023},
+  journal = {arXiv preprint arXiv:2305.05176},
+  note = {\url{https://arxiv.org/abs/2305.05176}}
+}
+
+@article{cascade_deferral,
+  title = {When Does Confidence-Based Cascade Deferral Suffice?},
+  author = {Jitkrittum, Wittawat and others},
+  year = {2023},
+  journal = {arXiv preprint arXiv:2307.02764},
+  note = {\url{https://arxiv.org/abs/2307.02764}}
+}
+
+@article{knowno,
+  title = {Robots That Ask For Help: Uncertainty Alignment for Large Language Model Planners (KnowNo)},
+  author = {Ren, Allen Z. and others},
+  year = {2023},
+  journal = {arXiv preprint arXiv:2307.01928},
+  note = {Split conformal prediction over option logprobs. \url{https://arxiv.org/abs/2307.01928}}
+}
+
+@article{uq_taxonomy,
+  title = {A Taxonomy of Uncertainty Quantification for Agents (trajectory-level calibration)},
+  author = {{Anonymous}},
+  year = {2026},
+  journal = {arXiv preprint arXiv:2609.07395},
+  note = {Step-level calibration does not imply trajectory-level calibration. \url{https://arxiv.org/abs/2609.07395}}
+}
+
+@article{tau_bench,
+  title = {tau-bench: A Benchmark for Tool-Agent-User Interaction},
+  author = {Yao, Shunyu and others},
+  year = {2024},
+  journal = {arXiv preprint arXiv:2406.12045},
+  note = {Introduces pass\^{}k. \url{https://arxiv.org/abs/2406.12045}}
+}
+
+@article{ai_agents_that_matter,
+  title = {AI Agents That Matter},
+  author = {Kapoor, Sayash and others},
+  year = {2024},
+  journal = {arXiv preprint arXiv:2407.01502},
+  note = {Accuracy--cost Pareto frontiers; retry baselines. \url{https://arxiv.org/abs/2407.01502}}
+}
+
+@inproceedings{guo_calibration,
+  title = {On Calibration of Modern Neural Networks},
+  author = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
+  year = {2017},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  note = {Temperature scaling; expected calibration error. \url{https://arxiv.org/abs/1706.04599}}
+}
+
+@misc{langchain_typesafe,
+  title = {TypeSafe integration — LangChain documentation},
+  author = {{LangChain}},
+  year = {2026},
+  howpublished = {\url{https://docs.langchain.com/oss/python/integrations/providers/typesafe}},
+  note = {TypeSafeClassifier, ModelRouterMiddleware, AutoModeMiddleware. Accessed 2026-09-20.}
+}
+
+@misc{pydantic_typesafe,
+  title = {TypeSafe model — Pydantic AI documentation},
+  author = {{Pydantic}},
+  year = {2026},
+  howpublished = {\url{https://pydantic.dev/docs/ai/models/typesafe/}},
+  note = {Jev as a model with FallbackModel. Accessed 2026-09-20.}
+}
+
+@misc{laya,
+  title = {Laya: an open-weights System One model},
+  author = {{Convai Innovations}},
+  year = {2026},
+  howpublished = {\url{https://huggingface.co/convaiinnovations/laya}},
+  note = {421M ModernBERT-large; same three primitives; Apache-2.0. Accessed 2026-09-20.}
+}

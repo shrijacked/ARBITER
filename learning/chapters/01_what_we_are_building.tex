@@ -1,0 +1,83 @@
+\chapter{What we are building}
+\label{ch:building}
+
+We are building \texttt{decision\_layer}: an open-source Python SDK that adds \emph{typed,
+calibrated decision points} to an LLM agent a developer already runs (LangChain, Pydantic
+AI, or the OpenAI Agents SDK).
+
+\section{The problem in one paragraph}
+
+An LLM agent makes many small, bounded decisions on every loop: which tool to call next,
+whether the task is finished, whether it is stuck. Today the same expensive model that
+plans and writes text also makes these decisions. That is slow, costly, and, worst of all,
+the decision comes back as plain text with \emph{no usable number} telling you how sure the
+model is. You cannot tell a confident choice from a coin flip.
+
+\section{The idea}
+
+At each decision point the SDK does four things (Figure~\ref{fig:value}):
+
+\begin{enumerate}[itemsep=2pt]
+  \item Build a small, token-budgeted \term{projection} of the agent's state.
+  \item Ask a cheap, swappable \term{engine} (Jev by default) a bounded typed question
+        and get back \emph{probabilities}.
+  \item A deterministic \term{policy} reads the (recalibrated) probability and either
+        \textbf{acts}, \textbf{narrows} the LLM's options, or \textbf{escalates} to the
+        LLM or a human.
+  \item Log the decision and its outcome so thresholds can be fitted and results reproduced.
+\end{enumerate}
+
+\begin{figure}[t]\centering
+\begin{tikzpicture}[node distance=8mm and 16mm]
+  \node[frontend] (state) {agent state};
+  \node[infra, right=of state] (proj) {projection\\(\,$\le$32k tokens)};
+  \node[model, right=of proj] (engine) {engine\\(Jev default)};
+  \node[backend, right=of engine] (policy) {policy};
+  \node[frontend, above right=6mm and 12mm of policy] (act) {act};
+  \node[frontend, right=of policy] (narrow) {narrow options};
+  \node[security, below right=6mm and 12mm of policy] (esc) {escalate\\(LLM / human)};
+  \draw[flow] (state) -- (proj);
+  \draw[flow] (proj) -- (engine);
+  \draw[flow] (engine) -- node[flowlabel]{prob.} (policy);
+  \draw[flow] (policy) -- (act);
+  \draw[flow] (policy) -- (narrow);
+  \draw[flow] (policy) -- (esc);
+\end{tikzpicture}
+\caption{The decision-layer value loop: state becomes a small projection, a cheap engine
+returns probabilities, and a deterministic policy acts, narrows, or escalates.\datalabel{Illustrative}}
+\label{fig:value}
+\end{figure}
+
+\section{Why this and not something else}
+
+The research phase (Part~IV) reached a clear verdict: integrations already exist
+(LangChain, Pydantic AI, and Vercel all ship Jev support, and about 200 community projects
+exist~\citep{langchain_typesafe,pydantic_typesafe}). What nobody has published is
+\emph{controlled evidence}, with proper baselines and trajectory-level calibration, that
+inserting a calibrated decision component actually lowers cost per successful task without
+hurting reliability. So the project has two co-equal deliverables:
+
+\begin{description}[leftmargin=1.4cm,style=nextline]
+  \item[Deliverable A --- the SDK] the instrument developers install.
+  \item[Deliverable B --- the evidence] a pre-registered, reproducible study (with a
+    released decision dataset and trajectory-checkpoint calibration) that no one else has.
+\end{description}
+
+\begin{whyhere}
+The engine is \emph{swappable} on purpose. If Jev turns out not to help on your workload,
+you change one line to an LLM-backed engine, a small trained classifier, or the
+open-weights Laya model~\citep{laya}, and the SDK still works. The product survives a
+negative result about any single engine.
+\end{whyhere}
+
+\section{What it is not}
+
+It is not a new agent framework (that is an explicit non-goal). It does not plan, write
+tool arguments, or generate text; the LLM keeps those jobs. It is never the security or
+authorization boundary; deterministic code owns that. The MVP is deliberately small: two
+decision points (which tool, and done/stuck) on one host framework.
+
+\begin{checkbox}
+Why can a model's answer be right while its confidence is untrustworthy? What would you
+measure to catch that? (Answer in Appendix~\ref{app:answers}.)
+\end{checkbox}

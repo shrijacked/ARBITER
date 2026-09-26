@@ -1,0 +1,77 @@
+\chapter{Routers, cascades, and verifiers}
+\label{ch:routers}
+
+The decision layer sits in a long line of ideas for spending less compute without losing
+quality. Knowing where they succeed, and where they usually fail, keeps our claims honest.
+
+\section{Routers}
+
+A \term{router} sends each query to the cheapest model likely to handle it. RouteLLM trains
+strong-vs-weak routers from preference data and reports large savings at matched
+quality~\citep{routellm}. The cautionary result: benchmarks found many routers barely beat a
+trivial ``mix models at random in the right proportion'' baseline, and routers trained on
+one distribution were near-random on another. Baselines matter.
+
+\section{Cascades}
+
+A \term{cascade} tries a cheap model first and escalates to an expensive one when a
+reliability score is low. FrugalGPT is the canonical example~\citep{frugalgpt}. But theory
+shows confidence-based deferral \emph{provably fails} when the downstream model is a
+specialist, under label noise, and under distribution shift~\citep{cascade_deferral}.
+
+\begin{figure}[h]\centering
+\fitfig{%
+\begin{tikzpicture}[node distance=6mm and 14mm, every node/.style={font=\scriptsize}]
+  % router (top)
+  \node[frontend] (q1) {query};
+  \node[backend, right=of q1] (r) {router};
+  \node[model, above right=4mm and 14mm of r] (weak) {cheap model};
+  \node[model, below right=4mm and 14mm of r] (strong) {strong model};
+  \draw[flow] (q1)--(r); \draw[flow] (r)--(weak); \draw[flow] (r)--(strong);
+  \node[font=\scriptsize\bfseries, above=2mm of weak] {Router: pick before running};
+\end{tikzpicture}}
+\par\vspace{6mm}
+\fitfig{%
+\begin{tikzpicture}[node distance=6mm and 14mm, every node/.style={font=\scriptsize}]
+  % cascade (separate picture, well below)
+  \node[frontend] (q2) {query};
+  \node[model, right=of q2] (cheap) {cheap model};
+  \node[backend, right=of cheap] (gate) {confident?};
+  \node[model, right=of gate] (exp) {strong model};
+  \node[frontend, above=7mm of gate] (out) {answer};
+  \draw[flow] (q2)--(cheap); \draw[flow] (cheap)--(gate);
+  \draw[flow] (gate)-- node[flowlabel]{yes} (out);
+  \draw[flow] (gate)-- node[flowlabel]{no} (exp);
+  \node[font=\scriptsize\bfseries, below=2mm of gate] {Cascade: pay cheap first, then decide};
+\end{tikzpicture}}
+\caption{Router vs cascade. A router decides \emph{before} paying (top); a cascade pays the
+cheap model first, then defers on low confidence (bottom).\datalabel{Illustrative}}
+\label{fig:routercascade}
+\end{figure}
+
+\begin{keyidea}
+Because Jev is so cheap, it acts more like a \emph{pre-generation router} (decide before
+paying for the LLM) than a cascade rung. What decides whether it helps is not its latency
+but its \emph{error rate on the specific decision}, and whether its confidence is calibrated
+enough to gate on.
+\end{keyidea}
+
+\section{Verifiers and the ``information the proposer lacks'' rule}
+
+Separating a \term{proposer} (the LLM) from a \term{scorer/verifier} helps in robotics and
+web agents, but the literature is consistent about \emph{why}: it helps when the scorer has
+information the proposer does not, such as execution results or environment state, not merely
+because it is a second model. Imperfect verifiers also cap the gains and can be gamed at
+large sample counts.
+
+\begin{whyhere}
+This sets our expectation for the honest outcome: ``cheaper decisions at equal or slightly
+lower accuracy,'' not ``a strictly better agent.'' The evaluation is designed to detect
+exactly that, and the arms (Chapter~\ref{ch:eval}) separate ``typed decision helped'' from
+``Jev specifically helped'' from ``more compute helped.''
+\end{whyhere}
+
+\begin{checkbox}
+Why is a cheap, calibrated classifier better modeled as a pre-generation router than as a
+cascade rung? (Appendix~\ref{app:answers}.)
+\end{checkbox}

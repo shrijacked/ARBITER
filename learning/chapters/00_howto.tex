@@ -1,0 +1,36 @@
+This book teaches everything behind the \texttt{decision-layer} project: what Jev is, how
+calibration works, how the SDK is designed, and what the evidence says. It is a living
+document, rebuilt as the project progresses (see the Build log in Part V).
+
+\section*{Reading paths by goal}
+
+\begin{description}[leftmargin=1.6cm,style=nextline]
+  \item[\textcolor{clAccent}{10-minute tour}] Chapter~\ref{ch:building} (what we build) then
+    Chapter~\ref{ch:jev} \S\ref{sec:jev-oneline} (what Jev does in one line) then
+    Figure~\ref{fig:arch} (the architecture).
+  \item[\textcolor{clAccent}{SDK user}] Part~II foundations, then Chapter~\ref{ch:arch}
+    (architecture) and Chapter~\ref{ch:decisionpoints} (decision points).
+  \item[\textcolor{clAccent}{Researcher}] Chapter~\ref{ch:calibration} (calibration),
+    Chapter~\ref{ch:eval} (evaluating agents), and Part~IV (evidence).
+  \item[\textcolor{clAccent}{Contributor}] Chapter~\ref{ch:engineering} (engineering
+    practices) and the Build log (Part~V).
+\end{description}
+
+\section*{Conventions}
+
+Every factual claim carries an evidence label so you always know how much to trust it:
+\DOC{} verified in TypeSafe's documentation; \IND{} an independent measurement;
+\VENDOR{} a vendor claim; \HYP{} our own hypothesis; \MEAS{} measured by us (with a run
+ID). No \MEAS{} labels exist yet, because we have not run experiments.
+
+Every figure and table caption ends with a \textbf{data label} in brackets stating where
+its numbers come from: \emph{Illustrative} (a drawing, not data), \emph{Exact} (computed
+from a formula), \emph{Reported by \dots} (someone else's measurement, cited), or
+\emph{Measured by us}. This rule exists so that a teaching diagram is never mistaken for a
+result.
+
+\begin{keyidea}
+The whole project rests on one honest distinction: a model's \emph{answer} and its
+\emph{calibrated confidence in that answer} are two different things. Most of this book is
+about the second one.
+\end{keyidea}

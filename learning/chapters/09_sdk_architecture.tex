@@ -1,0 +1,148 @@
+\chapter{SDK architecture}
+\label{ch:arch}
+
+The SDK extends the recommended architecture from the research (LLM-first, engine advisory):
+the LLM plans and writes; a swappable engine answers bounded questions; deterministic code
+owns safety, permissions, arithmetic, and verification.
+
+\section{Components}
+
+\begin{figure}[t]\centering
+\fitfig{%
+\begin{tikzpicture}[node distance=9mm and 14mm, every node/.style={font=\scriptsize}]
+  % Host agent row (top)
+  \node[frontend] (llm) {LLM: plan, args, text};
+  \node[frontend, right=28mm of llm] (tools) {tools};
+  \node[font=\scriptsize\bfseries] at ($(llm)!0.5!(tools)+(0,9mm)$) {host agent (one framework in v0.1)};
+
+  % SDK pipeline row (middle)
+  \node[infra, below=16mm of llm] (adapter) {adapter hooks};
+  \node[infra, right=of adapter] (proj) {projection\\builder};
+  \node[model, right=of proj] (eng) {engine\\protocol};
+  \node[backend, right=of eng] (cal) {calibrator};
+  \node[backend, right=of cal] (pol) {policy table};
+
+  % SDK support row (bottom)
+  \node[store, below=10mm of proj] (log) {log + cache};
+  \node[infra, left=14mm of log] (cli) {CLI};
+  \node[security, below=10mm of pol] (human) {human};
+
+  % pipeline
+  \draw[flow] (adapter)--(proj); \draw[flow] (proj)--(eng);
+  \draw[flow] (eng)--(cal); \draw[flow] (cal)--(pol);
+  % host <-> sdk
+  \draw[flow] (llm)--(tools);
+  \draw[flow] (tools) to[bend left=15] (adapter);
+  \draw[flow] (pol.north) to[bend right=18] node[flowlabel,pos=0.7]{narrow / flag} (llm.east);
+  \draw[flow] (pol)--(human);
+  % logging + cli + calibration feedback
+  \draw[flow] (eng)--(log); \draw[flow] (pol.south) to[bend left=12] (log.east);
+  \draw[flow] (log)--(cli);
+  \draw[flow] (cli.south) to[bend right=30] node[flowlabel,pos=0.6]{thresholds} (cal.south);
+\end{tikzpicture}}
+\caption{SDK components. The engine is advisory; the policy narrows or escalates; code owns
+execution and safety.\datalabel{Illustrative (docs/ARCHITECTURE.md \S4, docs/PLAN.md \S4)}}
+\label{fig:arch}
+\end{figure}
+
+\section{One loop iteration (MVP)}
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}[node distance=4.5mm and 9mm, every node/.style={font=\scriptsize}]
+  \node[frontend] (obs) {new observation};
+  \node[backend, right=of obs] (budget) {budget ok?};
+  \node[infra, right=of budget] (dp4) {DP4: done? stuck?};
+  \node[backend, right=of dp4] (ver) {completion\\verifier};
+  \node[frontend, above=5mm of ver] (done) {return};
+  \node[model, below=6mm of dp4] (dp2) {DP2: pre-select tool};
+  \node[frontend, left=of dp2] (llm) {LLM writes args};
+  \node[backend, left=of llm] (val) {validate + execute};
+  \draw[flow] (obs)--(budget); \draw[flow] (budget)-- node[flowlabel]{ok} (dp4);
+  \draw[flow] (dp4)-- node[flowlabel]{done} (ver); \draw[flow] (ver)--(done);
+  \draw[flow] (dp4.south) to[bend right=10] node[flowlabel]{continue} (dp2.east);
+  \draw[flow] (dp2)--(llm); \draw[flow] (llm)--(val);
+  \draw[flow] (val.south) to[bend right=25] (obs.south);
+\end{tikzpicture}
+\caption{The MVP loop: DP4 monitors progress, DP2 narrows the tool, the LLM writes
+arguments, and code validates and executes.\datalabel{Illustrative (docs/PLAN.md \S5)}}
+\label{fig:loop}
+\end{figure}
+
+\section{A single decision, in sequence}
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}[node distance=3mm and 20mm, every node/.style={font=\scriptsize}]
+  \node (rt) {runtime};
+  \node[right=of rt] (eng) {engine};
+  \node[right=of eng] (pol) {policy};
+  \node[right=of pol] (llm) {LLM};
+  \foreach \n in {rt,eng,pol,llm} { \draw[clExternal!50] (\n) -- ++(0,-3.4); }
+  \draw[flow] ($(rt)+(0,-0.5)$) -- node[flowlabel]{projection} ($(eng)+(0,-0.5)$);
+  \draw[flow] ($(eng)+(0,-1.1)$) -- node[flowlabel]{probs + conf} ($(rt)+(0,-1.1)$);
+  \draw[flow] ($(rt)+(0,-1.7)$) -- node[flowlabel]{band lookup} ($(pol)+(0,-1.7)$);
+  \draw[flow] ($(pol)+(0,-2.3)$) -- node[flowlabel]{expose top-k} ($(llm)+(0,-2.3)$);
+  \draw[flow] ($(llm)+(0,-2.9)$) -- node[flowlabel]{call + args} ($(rt)+(0,-2.9)$);
+\end{tikzpicture}
+\caption{Sequence for one DP2 decision: projection out, probabilities back, policy picks a
+band, the LLM fills arguments.\datalabel{Illustrative (docs/ARCHITECTURE.md \S5.3)}}
+\label{fig:sequence}
+\end{figure}
+
+\section{Confidence bands}
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}[every node/.style={font=\scriptsize}]
+  \draw[thick] (0,0) -- (10,0);
+  \foreach \x in {0,2.5,5,7.5,10} \draw (\x,0.1)--(\x,-0.1);
+  \node at (0,-0.35){0}; \node at (5,-0.35){$t_{esc}$}; \node at (7.5,-0.35){$t_{act}$};
+  \node at (10,-0.35){1};
+  \fill[clSecurity!25] (0,0.1) rectangle (5,0.55);
+  \fill[clInfra!30] (5,0.1) rectangle (7.5,0.55);
+  \fill[clBackend!30] (7.5,0.1) rectangle (10,0.55);
+  \node at (2.5,0.32){escalate}; \node at (6.25,0.32){caution}; \node at (8.75,0.32){act};
+\end{tikzpicture}
+\caption{The policy maps the gating statistic to three bands. Thresholds $t_{esc}, t_{act}$
+are fitted per DP, primitive, and model version.\datalabel{Illustrative (docs/ARCHITECTURE.md \S6)}}
+\label{fig:bands}
+\end{figure}
+
+\section{Security boundary}
+
+Models advise; code authorizes. Untrusted inputs (user text, tool outputs) reach an advisory
+layer (the LLM proposal, DP3/DP5 screens), but the authoritative layer (permission filter,
+allow/deny lists, schema validation, human approval, sandbox) is deterministic. DP3 output
+can only \emph{raise} the required approval level, never lower it.
+
+\begin{figure}[h]\centering
+\begin{tikzpicture}[node distance=5mm and 10mm, every node/.style={font=\scriptsize}]
+  \node[external] (u) {user text};
+  \node[external, below=3mm of u] (o) {tool outputs};
+  \node[model, right=16mm of u] (adv) {advisory:\\LLM + DP3/DP5};
+  \node[backend, right=16mm of adv] (auth) {authoritative:\\filter, allow/deny,\\schema, human, sandbox};
+  \node[frontend, right=of auth] (exec) {execute};
+  \draw[flow] (u)--(adv); \draw[flow] (o)--(adv);
+  \draw[flow] (adv)-- node[flowlabel]{raise only} (auth);
+  \draw[flow] (auth)--(exec);
+\end{tikzpicture}
+\caption{Advisory vs authoritative layers. Injection is assumed; the engine is never the
+boundary.\datalabel{Illustrative (docs/ARCHITECTURE.md \S10)}}
+\label{fig:security}
+\end{figure}
+
+\section{Secrets: allow-list by reference}
+
+The SDK never redacts secrets out of a model-visible string (a deny-list always misses
+something). Instead, projections and logs carry secret \emph{names}; the executor injects
+values at call time. A fuzz test smuggles a known token through every projection and asserts
+it never appears.
+
+\begin{lstlisting}[language=Python,caption={Engine swap is one line; the rest is unchanged.},label={lst:swap}]
+dp2 = DecisionPoint(question=choice, engine=JevEngine(model="jev-1.13.0"), policy=policy)
+# swap the engine, keep everything else:
+dp2 = DecisionPoint(question=choice, engine=LLMAdapterEngine(provider="..."), policy=policy)
+\end{lstlisting}
+
+\begin{checkbox}
+DP3 says a call is ``read-only'' with confidence 0.97, but the allow/deny list marks it
+destructive. What happens, and which principle decides? (Appendix~\ref{app:answers}.)
+\end{checkbox}

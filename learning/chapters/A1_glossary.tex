@@ -1,0 +1,56 @@
+\chapter{Glossary}
+\label{app:glossary}
+
+\begin{description}[style=nextline,leftmargin=0.6cm]
+  \item[Agent loop]\index{agent loop} observe, decide, act, observe again; the cycle an LLM
+    agent runs.
+  \item[AUROC]\index{AUROC} area under the ROC curve; here, how well a confidence score ranks
+    correct answers above incorrect ones (0.5 = chance, 1.0 = perfect).
+  \item[Brier score]\index{Brier score} mean squared error between predicted probabilities
+    and outcomes; a proper scoring rule for probabilistic predictions.
+  \item[Calibration]\index{calibration} the property that predictions stated at probability
+    $p$ are correct a fraction $p$ of the time, measured over groups.
+  \item[Cascade]\index{cascade} try a cheap model first, escalate to an expensive one on low
+    confidence.
+  \item[Choice]\index{Choice} a Jev primitive: pick one of up to 255 options; returns
+    per-option probabilities and a confidence.
+  \item[Confidence (Jev field)]\index{confidence} a statistic of the probability
+    distribution; formula undisclosed; independently found weaker than max probability for
+    gating.
+  \item[Conformal prediction]\index{conformal prediction} builds a set guaranteed to contain
+    the truth with chosen probability, using a calibration set.
+  \item[Coverage]\index{coverage} the fraction of decisions a policy acts on automatically at
+    a given threshold.
+  \item[Decision point (DP)]\index{decision point} a bounded, closed-set decision in the
+    agent loop (DP1--DP7).
+  \item[ECE]\index{ECE} expected calibration error; average gap between confidence and
+    accuracy across probability bins.
+  \item[Engine]\index{engine} the swappable component that answers a decision question (Jev,
+    LLM-adapter, classifier, rules, oracle, random).
+  \item[Gate (G0/G1/G2)]\index{gate} a go/modify/stop checkpoint with pre-registered criteria.
+  \item[Isotonic regression]\index{isotonic regression} a monotonic post-hoc recalibrator
+    that maps stated probability to observed frequency.
+  \item[Noul]\index{Noul} a Jev primitive: the probability that a statement is true; no
+    separate confidence.
+  \item[Noise floor]\index{noise floor} the small nonzero ECE a perfectly calibrated model
+    shows on finite data.
+  \item[pass@k / pass\^{}k]\index{passk@\texttt{pass\textasciicircum k}} success in at least
+    one of $k$ tries / in all $k$ tries; the latter measures reliability.
+  \item[Pareto frontier]\index{Pareto frontier} the set of systems not beaten on both cost
+    and accuracy at once.
+  \item[Policy table]\index{policy table} the deterministic rules mapping a gating statistic
+    to act/narrow/escalate.
+  \item[Projection]\index{projection} a token-budgeted, secret-free view of agent state sent
+    to the engine.
+  \item[Record/replay cache]\index{record/replay cache} content-hashed store of model
+    responses enabling deterministic offline re-runs.
+  \item[Router]\index{router} sends each query to the cheapest capable model, deciding before
+    paying.
+  \item[Score]\index{Score} a Jev primitive: a position on an ordered 2--10 level scale.
+  \item[System One model]\index{System One model} TypeSafe's term for a fast, bounded-judgment
+    model (after Kahneman's System 1); Jev is one.
+  \item[Temperature scaling]\index{temperature scaling} a one-parameter post-hoc recalibrator
+    on logits.
+  \item[Trajectory-level calibration]\index{trajectory-level calibration} calibration measured
+    across checkpoints of a whole run, not just per step.
+\end{description}
