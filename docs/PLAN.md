@@ -266,10 +266,10 @@ Legend: **Owner** = "AI" (me) or "You" (human touchpoint). **Status** = TODO / D
 | PT-0.1 | Git baseline | - | repo + `.gitignore`, four docs committed | `git log` shows baseline commit; `.claude/settings.local.json` untracked | AI | DONE | D12 |
 | PT-0.2 | Office-hours design doc + spec review | - | design doc in `~/.gstack/projects/jev/` | 3-round independent review converged (7->8->8/10), Status APPROVED | AI | DONE | design doc |
 | PT-0.3 | Plan review (autoplan CEO/Eng/DX) | PT-0.2 | review findings folded here | 3 independent reviews done; findings in §7.3, §11, §12; consensus §16.3 | AI | DONE | §16.3 |
-| PT-0.4 | Write PLAN.md | PT-0.3 | this file | all 16 sections; ID coverage check passes (§14) | AI | DOING | this doc |
-| PT-0.5 | DECISION_LOG amendments | PT-0.4 | D11-D15, Q11-Q17, product risks, changelog | rows present in [DECISION_LOG.md](DECISION_LOG.md); dated 2026-09-27 | AI | DOING | D11-D15 |
-| PT-0.6 | Learning book + master PDF | PT-0.4 | `learning/` + `jev-learning-master.pdf` | clean Tectonic build; every page rendered; every figure has a data label | AI | TODO | LB-* |
-| PT-0.7 | AGENTS.md working agreement | PT-0.6 | `AGENTS.md` | definition-of-done incl. book update + PDF rebuild; error-message + secrets rules | AI | TODO | §14 |
+| PT-0.4 | Write PLAN.md | PT-0.3 | this file | all 16 sections; ID coverage check passes (§14); 5/5 Mermaid diagrams render | AI | DONE | this doc |
+| PT-0.5 | DECISION_LOG amendments | PT-0.4 | D11-D16, Q11-Q17, product risks, changelog | rows present in [DECISION_LOG.md](DECISION_LOG.md); dated 2026-09-27 | AI | DONE | D11-D16 |
+| PT-0.6 | Learning book + master PDF | PT-0.4 | `learning/` + `jev-learning-master.pdf` | clean Tectonic build; 58 pp; every page rendered + inspected; every figure has a data label; `make verify` = VERIFY OK | AI | DONE | LB-* |
+| PT-0.7 | AGENTS.md working agreement | PT-0.6 | `AGENTS.md` | definition-of-done incl. book update + PDF rebuild; error-message + secrets rules | AI | DONE | §14 |
 | PT-0.8 | Python 3.12 via uv + package skeleton | PT-0.7 | `pyproject`, src layout, pytest/ruff/mypy, `make check` | `make check` green on an empty skeleton | AI | TODO (needs touchpoint H3) | D13 |
 | PT-0.9 | Secrets policy | PT-0.8 | `.env.example`, redaction/allow-list rule | secret-smuggle test asserts no secret in any projection or log (EF-15) | AI | TODO | N3, EF-15 |
 
@@ -531,7 +531,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D15; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14 verification in [AGENTS.md](../AGENTS.md).
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D16; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14 verification in [AGENTS.md](../AGENTS.md).
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
