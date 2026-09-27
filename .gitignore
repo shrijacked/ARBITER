@@ -1,5 +1,6 @@
-# Learning book build intermediates (the master PDF is tracked; build/ is not)
-learning/build/
+# Local only. Updated on this machine; never committed or pushed (D18).
+/AGENTS.md
+/learning/
 
 # Secrets and environment
 .env

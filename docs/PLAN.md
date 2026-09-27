@@ -491,9 +491,8 @@ Every PLAN task is "done" only when, in order:
 1. The task's verification (done-criteria column) has been run and passes.
 2. The task's **Status** is updated here in PLAN.md.
 3. [DECISION_LOG.md](DECISION_LOG.md) gets a dated row if anything decided/assumed/risked changed.
-4. The learning book gets the matching section and a Build-log entry.
-5. `make -C learning pdf verify` runs clean and the master PDF is rebuilt.
-6. One descriptive commit is made.
+4. The learning book gets the matching section and a Build-log entry, and `make -C learning pdf verify` is clean. That update stays on this machine.
+5. One descriptive commit is made and pushed. The commit does not include `AGENTS.md` or `learning/` (D18).
 
 Nothing publishes a cost or reliability claim before the gate that produced it (G1 for per-decision cost, G2 for end-to-end). Data is public or synthetic only. Secrets never enter model-visible state (allow-list by reference, EF-15). Every Jev request pins an explicit version and asserts the returned `model` field (D10). User-facing errors state problem, cause, and fix (EF-DX3). Full details in [AGENTS.md](../AGENTS.md).
 
@@ -531,7 +530,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D17; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14 verification in [AGENTS.md](../AGENTS.md).
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D18; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14 verification in [AGENTS.md](../AGENTS.md).
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
@@ -547,3 +546,4 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 |---|---|
 | 2026-09-27 | PLAN.md created. Stitched the four research docs into the operational product plan for the SDK. Recorded the product decision (D11), source-of-truth decision (D12), and toolchain/book decisions (D13-D15) in DECISION_LOG. Folded in the independent plan-review findings (EF-01..EF-17, EF-DX1..8) and the CEO User Challenge (Q17). |
 | 2026-09-27 | Adopted package name `arbiter` (import `arbiter`; product name ARBITER). Recorded as D17. Resolves Q16. Supersedes the D15 working name. |
+| 2026-09-27 | `AGENTS.md` and `learning/` are local only (D18). They are still updated as tasks finish, and they are not committed or pushed. |
