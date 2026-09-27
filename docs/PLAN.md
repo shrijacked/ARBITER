@@ -271,7 +271,7 @@ Legend: **Owner** = "AI" (me) or "You" (human touchpoint). **Status** = TODO / D
 | PT-0.6 | Learning book + master PDF | PT-0.4 | `learning/` + `jev-learning-master.pdf` | clean Tectonic build; 58 pp; every page rendered + inspected; every figure has a data label; `make verify` = VERIFY OK | AI | DONE | LB-* |
 | PT-0.7 | AGENTS.md working agreement | PT-0.6 | `AGENTS.md` | definition-of-done incl. book update + PDF rebuild; error-message + secrets rules | AI | DONE | §14 |
 | PT-0.8 | Python 3.12 via uv + package skeleton | PT-0.7 | `pyproject`, src layout, pytest/ruff/mypy, `make check` | `make check` green on an empty skeleton | AI | DONE | D13, D20 |
-| PT-0.9 | Secrets policy | PT-0.8 | `.env.example`, redaction/allow-list rule | secret-smuggle test asserts no secret in any projection or log (EF-15) | AI | TODO | N3, EF-15 |
+| PT-0.9 | Secrets policy | PT-0.8 | `.env.example`, redaction/allow-list rule | secret-smuggle test asserts no secret in any projection or log (EF-15) | AI | DONE | N3, EF-15, D21 |
 
 ### 7.2 M1-M8 — milestone task list (research tasks carry their T-IDs)
 
@@ -529,7 +529,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D20; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D21; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
@@ -548,3 +548,4 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 | 2026-09-27 | `AGENTS.md` and `learning/` are local only (D18). They are still updated as tasks finish, and they are not committed or pushed. |
 | 2026-09-27 | Removed `AGENTS.md` and `learning/` (D19). They are not recreated. Definition of done no longer includes them. |
 | 2026-09-27 | PT-0.8 done. Python 3.12.14 via uv 0.12.19; `make check` is ruff, mypy, and pytest (D20). |
+| 2026-09-27 | PT-0.9 done. Secrets are allow-listed by name; projections and logs fail closed on a registered value (D21). |
