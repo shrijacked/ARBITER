@@ -278,7 +278,7 @@ Legend: **Owner** = "AI" (me) or "You" (human touchpoint). **Status** = TODO / D
 | ID | Task | Depends | Done-criteria | Owner | Status | Traceability |
 |---|---|---|---|---|---|---|
 | PT-1.1 | Decision record + JSONL log | PT-0.8 | schema documented; round-trips; append-only | AI | DONE | [ARCH §4.2](ARCHITECTURE.md#42-component-responsibilities), D22 |
-| PT-1.2 | Record/replay cache (= T0.2), content-hashed | PT-1.1 | hash excludes wall-clock/counters; cross-process stable under randomized `PYTHONHASHSEED` (EF-11) | AI | TODO | T0.2, EF-11 |
+| PT-1.2 | Record/replay cache (= T0.2), content-hashed | PT-1.1 | hash excludes wall-clock/counters; cross-process stable under randomized `PYTHONHASHSEED` (EF-11) | AI | DONE | T0.2, EF-11, D23 |
 | PT-1.3 | Typed decision-point spec (Choice/Score/Noul + contrastive criteria + mandatory "none/other") | PT-1.1 | 422-shaped questions rejected; "other" always present | AI | TODO | [ARCH §8](ARCHITECTURE.md#8-tool-interface-concepts) |
 | PT-1.4 | Projection builders (<=32k, deterministic, secret-free) | PT-1.3 | token budget never exceeded; identical output for identical state; secret-smuggle test passes | AI | TODO | [ARCH §7](ARCHITECTURE.md#7-state-and-memory-design), EF-03, EF-15 |
 | PT-1.5 | Engine protocol + fake/oracle/random engines | PT-1.3 | contract tests; "confidence unavailable" is a first-class return (EF-12) | AI | TODO | D3, EF-12 |
@@ -529,7 +529,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D22; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D23; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
@@ -550,3 +550,4 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 | 2026-09-27 | PT-0.8 done. Python 3.12.14 via uv 0.12.19; `make check` is ruff, mypy, and pytest (D20). |
 | 2026-09-27 | PT-0.9 done. Secrets are allow-listed by name; projections and logs fail closed on a registered value (D21). |
 | 2026-09-27 | PT-1.1 done. Append-only JSONL decision log. Milestone moves to M1 (D22). |
+| 2026-09-27 | PT-1.2 done. Replay hash ignores clocks, counters, and floats (D23). |
