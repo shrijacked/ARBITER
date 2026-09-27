@@ -165,6 +165,7 @@ These rows amend the register after the user chose to build a product. They do *
 | D14 | 2026-09-27 | **The learning book is LaTeX built with Tectonic, and the master PDF is tracked in git** at `learning/jev-learning-master.pdf`, rebuilt as work progresses. | User explicitly asked for a professional, well-formatted LaTeX learning doc with a master PDF, updated side by side. Tectonic is installed (no MacTeX). Tradeoff: repo grows ~1-3 MB per rebuild commit; revisit Git LFS once there is a remote (RISK-P5). The DX review suggested build-in-CI instead, but the user's explicit request wins. | — | Yes (could move PDF to CI/LFS later). |
 | D15 | 2026-09-27 | **Working package name is `decision-layer`** (import `decision_layer`) until the user picks a final name before the first publish (Q16). | Placeholder so work can proceed; examples flagged as name-churn risk (EF-DX8-adjacent). | — | Yes (Q16). |
 | D16 | 2026-09-27 | **Elevate the evidence artifact to a co-headline deliverable** (a pre-registered, reproducible study with trajectory-checkpoint calibration + released dataset), alongside the SDK. | The CEO plan review argued the research's own conclusion is that the moat is the evidence, not another integration. Keeps D11's product but addresses the strongest strategic risk without abandoning it. Speed-to-evidence tracked as RISK-P4; the fuller challenge is Q17 for the user to reweight. | — | Yes (Q17). |
+| D17 | 2026-09-27 | **Package name is `arbiter`** (import `arbiter`). Product name ARBITER: Agent Runtime for Bounded Inference, Triage, Evaluation & Routing. | Set before the package skeleton so examples, the CLI, and the learning book use one name. Resolves the name half of Q16. License and publishing stay at touchpoint H8. | **D15** (working name `decision-layer` / `decision_layer`). | Yes, before the first publish. |
 
 ### 11.2 New open questions
 
@@ -201,3 +202,4 @@ These rows amend the register after the user chose to build a product. They do *
 |---|---|
 | 2026-09-20 | Initial register created from the research phase. Hypotheses H0–H5, assumptions R1–R5, decisions D1–D10, questions Q1–Q10, risks R1–R10. |
 | 2026-09-27 | Product phase begins. Added decisions D11-D16 (D11 supersedes D1/D9 and closes D8), open questions Q11-Q17 (incl. the CEO User Challenge), product risks RISK-P1..P6, and a data-quality note on RESEARCH.md lines 159-169. Operational plan is now [PLAN.md](PLAN.md). |
+| 2026-09-27 | Added D17: package name `arbiter` (import `arbiter`). Supersedes D15. Resolves Q16 for the install name. |

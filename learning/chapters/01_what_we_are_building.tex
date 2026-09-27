@@ -1,9 +1,10 @@
 \chapter{What we are building}
 \label{ch:building}
 
-We are building \texttt{decision\_layer}: an open-source Python SDK that adds \emph{typed,
-calibrated decision points} to an LLM agent a developer already runs (LangChain, Pydantic
-AI, or the OpenAI Agents SDK).
+We are building \texttt{arbiter} (ARBITER: Agent Runtime for Bounded Inference, Triage,
+Evaluation \& Routing): an open-source Python SDK that adds \emph{typed, calibrated
+decision points} to an LLM agent a developer already runs (LangChain, Pydantic AI, or the
+OpenAI Agents SDK).
 
 \section{The problem in one paragraph}
 
@@ -43,7 +44,7 @@ At each decision point the SDK does four things (Figure~\ref{fig:value}):
   \draw[flow] (policy) -- (narrow);
   \draw[flow] (policy) -- (esc);
 \end{tikzpicture}
-\caption{The decision-layer value loop: state becomes a small projection, a cheap engine
+\caption{The arbiter value loop: state becomes a small projection, a cheap engine
 returns probabilities, and a deterministic policy acts, narrows, or escalates.\datalabel{Illustrative}}
 \label{fig:value}
 \end{figure}

@@ -1,4 +1,4 @@
-# PLAN.md — decision-layer: Operational Master Plan
+# PLAN.md — ARBITER: Operational Master Plan
 
 **Status:** ACTIVE. This is the single operational source of truth for building the product. It stitches together the four research documents and turns them into a dated, trackable plan.
 
@@ -55,7 +55,7 @@ Evidence labels, used everywhere: **[DOC]** official docs · **[IND]** independe
 
 ## 2. What we are building
 
-An **open-source Python SDK ("decision-layer")** that adds typed, calibrated decision points to an LLM agent a developer already runs (LangChain, Pydantic AI, or the OpenAI Agents SDK).
+An **open-source Python SDK (`arbiter`)** — ARBITER, Agent Runtime for Bounded Inference, Triage, Evaluation & Routing — that adds typed, calibrated decision points to an LLM agent a developer already runs (LangChain, Pydantic AI, or the OpenAI Agents SDK).
 
 At each decision point:
 1. The runtime builds a small, token-budgeted **projection** of the agent's state.
@@ -124,7 +124,7 @@ flowchart LR
         LLM["LLM: plans, writes tool arguments, text"]
         Tools[Tools]
     end
-    subgraph sdk ["decision-layer SDK"]
+    subgraph sdk ["arbiter SDK"]
         Adapter["Framework adapter hooks (one host in v0.1)"]
         Proj["Projection builder (token-budgeted, deterministic, secret-free)"]
         Engines["Engine protocol: Jev (default), LLM-adapter, classifier, rules, oracle, random"]
@@ -231,7 +231,7 @@ flowchart LR
 
 ```mermaid
 gantt
-    title decision-layer roadmap (estimated; re-planned at each gate)
+    title arbiter roadmap (estimated; re-planned at each gate)
     dateFormat YYYY-MM-DD
     axisFormat %b %d
     section Foundations
@@ -344,20 +344,20 @@ These come from the independent engineering review and are baked into the done-c
 Illustrative shapes [HYP], finalized at M3. The point is that defaults exist and are written down.
 
 ```text
-decision-layer init                 # scaffold config + .env.example + sample DP definitions
-decision-layer doctor               # check Python >=3.10, keys, cache; print the fix if wrong
-decision-layer quickstart           # run the offline demo from the committed cache (no API key)
-decision-layer calibrate <log>      # --dp DP2|DP4  --engine jev(default)  --calibrator isotonic(default)
+arbiter init                        # scaffold config + .env.example + sample DP definitions
+arbiter doctor                      # check Python >=3.10, keys, cache; print the fix if wrong
+arbiter quickstart                  # run the offline demo from the committed cache (no API key)
+arbiter calibrate <log>             # --dp DP2|DP4  --engine jev(default)  --calibrator isotonic(default)
                                     # --target-precision 0.9  --min-samples 200  --out calib.json
-decision-layer eval                 # run arms on a benchmark; --arms A0,A1,A2  --seeds 3  --from-cache
-decision-layer report <run>         # render a saved eval into tables/figures (no API calls)
-decision-layer replay <run>         # re-run from the cache (no API calls); NOT a live re-run
+arbiter eval                        # run arms on a benchmark; --arms A0,A1,A2  --seeds 3  --from-cache
+arbiter report <run>                # render a saved eval into tables/figures (no API calls)
+arbiter replay <run>                # re-run from the cache (no API calls); NOT a live re-run
 ```
 
 Canonical decision-point example (the same one the quickstart and the book use) [HYP]:
 
 ```python
-from decision_layer import DecisionPoint, Choice, JevEngine, Policy
+from arbiter import DecisionPoint, Choice, JevEngine, Policy
 
 dp2 = DecisionPoint(
     question=Choice(
@@ -426,7 +426,7 @@ Written as "touchpoint H1..H8" to avoid clashing with hypotheses H0-H5.
 | H5 | go/modify/stop call at G0, G1, G2 | each gate | PT-2.9, PT-5.6, PT-6.4 |
 | H6 | second labeler for 200-500 ambiguous decisions | during M5 | PT-5.3, Q13 |
 | H7 | spend approvals (~$100-500 M5; ~$200-1,500 M6) | before M5/M6 | PT-5.x, PT-6.x |
-| H8 | final package name, license, GitHub + PyPI accounts | M4 or M7 | PT-4.1, PT-7.1, Q14/Q16 |
+| H8 | license, GitHub + PyPI accounts (package name is `arbiter`, D17) | M4 or M7 | PT-4.1, PT-7.1, Q14 |
 
 **Your one action now (office-hours assignment):** request Jev access (H1) and pick one LLM provider with a spend cap (H2), so both are ready before M2. The offline M1 core is built and tested meanwhile with no keys.
 
@@ -447,7 +447,7 @@ Written as "touchpoint H1..H8" to avoid clashing with hypotheses H0-H5.
 | Q13 | Who is the second labeler? | (open) | before M5 |
 | Q14 | License | MIT / Apache-2.0 | before M4/M7 |
 | Q15 | Release a no-claims alpha before the evidence? | yes (M4) / hold to M7 | before M4 |
-| Q16 | Final package name | `decision-layer` (working) / other | before M4/M7 |
+| Q16 | Final package name | `arbiter` (D17) | resolved 2026-09-27 |
 | **Q17** | **User Challenge (from the CEO review):** make the evidence/benchmark/dataset the headline and the SDK the instrument; consider racing a minimal pre-registered study to publication first (community shipped ~12 studies within 5 days of Jev's launch), consider a Laya (open-weights) default and an encoder-first "label bootstrap" framing, and consider contributing the eval+calibrate tooling *into* LangChain/Pydantic AI rather than shipping standalone. **Not auto-decided.** Current stance: keep the SDK (your locked choice A) but elevate the evidence to a co-headline deliverable (§2.1) and treat speed-to-evidence as a first-class risk (RISK-P4). Your call whether to reweight further. | keep A as-is / elevate evidence (current) / pivot to benchmark-first / contribute into a framework | You |
 
 ---
@@ -531,7 +531,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D16; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14 verification in [AGENTS.md](../AGENTS.md).
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D17; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14 verification in [AGENTS.md](../AGENTS.md).
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
@@ -545,4 +545,5 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 
 | Date | Change |
 |---|---|
-| 2026-09-27 | PLAN.md created. Stitched the four research docs into the operational product plan for the decision-layer SDK. Recorded the product decision (D11), source-of-truth decision (D12), and toolchain/book decisions (D13-D15) in DECISION_LOG. Folded in the independent plan-review findings (EF-01..EF-17, EF-DX1..8) and the CEO User Challenge (Q17). |
+| 2026-09-27 | PLAN.md created. Stitched the four research docs into the operational product plan for the SDK. Recorded the product decision (D11), source-of-truth decision (D12), and toolchain/book decisions (D13-D15) in DECISION_LOG. Folded in the independent plan-review findings (EF-01..EF-17, EF-DX1..8) and the CEO User Challenge (Q17). |
+| 2026-09-27 | Adopted package name `arbiter` (import `arbiter`; product name ARBITER). Recorded as D17. Resolves Q16. Supersedes the D15 working name. |

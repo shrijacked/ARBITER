@@ -1,4 +1,4 @@
-# AGENTS.md — decision-layer (repo working agreement)
+# AGENTS.md — arbiter (repo working agreement)
 
 This repo-local file adds project-specific rules on top of the user's global development
 rules. Where both apply, the stricter one wins. It is intentionally short; the operational
