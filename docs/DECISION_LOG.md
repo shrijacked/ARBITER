@@ -167,6 +167,7 @@ These rows amend the register after the user chose to build a product. They do *
 | D16 | 2026-09-27 | **Elevate the evidence artifact to a co-headline deliverable** (a pre-registered, reproducible study with trajectory-checkpoint calibration + released dataset), alongside the SDK. | The CEO plan review argued the research's own conclusion is that the moat is the evidence, not another integration. Keeps D11's product but addresses the strongest strategic risk without abandoning it. Speed-to-evidence tracked as RISK-P4; the fuller challenge is Q17 for the user to reweight. | — | Yes (Q17). |
 | D17 | 2026-09-27 | **Package name is `arbiter`** (import `arbiter`). Product name ARBITER: Agent Runtime for Bounded Inference, Triage, Evaluation & Routing. | Set before the package skeleton so examples, the CLI, and the learning book use one name. Resolves the name half of Q16. License and publishing stay at touchpoint H8. | **D15** (working name `decision-layer` / `decision_layer`). | Yes, before the first publish. |
 | D18 | 2026-09-27 | **`AGENTS.md` and `learning/` stay on this machine.** They are updated as tasks finish, including a local PDF rebuild, and they are never committed or pushed. | The user said they should never be pushed. The book remains the teaching record locally. | **D14** (master PDF tracked in git). | Yes. |
+| D19 | 2026-09-27 | **Remove `AGENTS.md` and `learning/`.** They are deleted, not kept locally, and not recreated. Definition of done is PLAN.md §14 only. | The user said to remove them. | **D14** and **D18**. | Yes. |
 
 ### 11.2 New open questions
 
@@ -205,3 +206,4 @@ These rows amend the register after the user chose to build a product. They do *
 | 2026-09-27 | Product phase begins. Added decisions D11-D16 (D11 supersedes D1/D9 and closes D8), open questions Q11-Q17 (incl. the CEO User Challenge), product risks RISK-P1..P6, and a data-quality note on RESEARCH.md lines 159-169. Operational plan is now [PLAN.md](PLAN.md). |
 | 2026-09-27 | Added D17: package name `arbiter` (import `arbiter`). Supersedes D15. Resolves Q16 for the install name. |
 | 2026-09-27 | Added D18: `AGENTS.md` and `learning/` are local only. Supersedes the tracked-PDF half of D14. |
+| 2026-09-27 | Added D19: `AGENTS.md` and `learning/` are removed. Supersedes D14 and D18. |
