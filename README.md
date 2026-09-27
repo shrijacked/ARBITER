@@ -10,8 +10,15 @@ This repository is at version `0.0.0`. It does not make cost, latency, or accura
 
 - An allow-list of secret **names**. Projections and logs record the name. The executor injects the value at call time. A registered secret value in model-visible state fails closed.
 - An append-only JSONL decision log. Each line round-trips. Lines are not rewritten.
+- A content-hashed replay cache. The hash ignores clocks, counters, and floats. A miss falls back.
+- Typed Choice, Score, and Noul questions. Choice always includes `other`. Bad shapes are rejected before a call.
+- Projection builders for DP2 and DP4. They stay inside a token budget and do not copy secret values.
+- Fake, oracle, and random engines. A missing probability is a normal return.
+- A policy table with both max-probability and confidence bands. A side effect runs only when deterministic code opens the gate.
+- Isotonic, histogram, and temperature calibrators, plus Brier, ECE, AUROC, and coverage. Fits under 200 labels are refused. Temperature scaling needs logits.
+- Fallbacks for rate limit, overload, timeout, a malformed answer, and an out-of-range choice. The fallback sees the full context.
 
-Not built yet: projection builders, engines, the policy table, calibrators, a framework adapter, and the CLI. The operational plan is [docs/PLAN.md](docs/PLAN.md).
+Not built yet: a live Jev or LLM engine, a framework adapter, and the CLI. Those wait on a provider key and on the G0 freeze in [docs/PLAN.md](docs/PLAN.md).
 
 ## What this is not
 

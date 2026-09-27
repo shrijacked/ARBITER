@@ -279,12 +279,12 @@ Legend: **Owner** = "AI" (me) or "You" (human touchpoint). **Status** = TODO / D
 |---|---|---|---|---|---|---|
 | PT-1.1 | Decision record + JSONL log | PT-0.8 | schema documented; round-trips; append-only | AI | DONE | [ARCH §4.2](ARCHITECTURE.md#42-component-responsibilities), D22 |
 | PT-1.2 | Record/replay cache (= T0.2), content-hashed | PT-1.1 | hash excludes wall-clock/counters; cross-process stable under randomized `PYTHONHASHSEED` (EF-11) | AI | DONE | T0.2, EF-11, D23 |
-| PT-1.3 | Typed decision-point spec (Choice/Score/Noul + contrastive criteria + mandatory "none/other") | PT-1.1 | 422-shaped questions rejected; "other" always present | AI | TODO | [ARCH §8](ARCHITECTURE.md#8-tool-interface-concepts) |
-| PT-1.4 | Projection builders (<=32k, deterministic, secret-free) | PT-1.3 | token budget never exceeded; identical output for identical state; secret-smuggle test passes | AI | TODO | [ARCH §7](ARCHITECTURE.md#7-state-and-memory-design), EF-03, EF-15 |
-| PT-1.5 | Engine protocol + fake/oracle/random engines | PT-1.3 | contract tests; "confidence unavailable" is a first-class return (EF-12) | AI | TODO | D3, EF-12 |
-| PT-1.6 | Policy table (both gating statistics; bands; authority classes; fail-closed) | PT-1.5 | band lookup total; side-effect path cannot execute without deterministic gate (property test, EF-16); both max-prob and confidence supported (EF-02) | AI | TODO | [ARCH §6](ARCHITECTURE.md#6-model-interaction-and-orchestration-strategy), EF-02, EF-16 |
-| PT-1.7 | Calibrators (isotonic/temperature/histogram) + metrics (ECE w/ noise floor, Brier, AUROC, coverage) | PT-1.5 | saturated-1.0 handled (epsilon-clip or histogram; temperature only if logits exist) (EF-13); refuses thin data (EF-14) | AI | TODO | T0.6, EF-13, EF-14 |
-| PT-1.8 | Fallbacks (fault injection) + full-context reconstruction on fallback | PT-1.6 | fallback fires on 429/529/timeout/malformed/out-of-range; fallback rebuilds full context (EF-04); fallback rate logged | AI | TODO | [ARCH §9](ARCHITECTURE.md#9-error-handling-uncertainty-and-fallbacks), EF-04 |
+| PT-1.3 | Typed decision-point spec (Choice/Score/Noul + contrastive criteria + mandatory "none/other") | PT-1.1 | 422-shaped questions rejected; "other" always present | AI | DONE | [ARCH §8](ARCHITECTURE.md#8-tool-interface-concepts), D24 |
+| PT-1.4 | Projection builders (<=32k, deterministic, secret-free) | PT-1.3 | token budget never exceeded; identical output for identical state; secret-smuggle test passes | AI | DONE | [ARCH §7](ARCHITECTURE.md#7-state-and-memory-design), EF-03, EF-15, D24 |
+| PT-1.5 | Engine protocol + fake/oracle/random engines | PT-1.3 | contract tests; "confidence unavailable" is a first-class return (EF-12) | AI | DONE | D3, EF-12, D24 |
+| PT-1.6 | Policy table (both gating statistics; bands; authority classes; fail-closed) | PT-1.5 | band lookup total; side-effect path cannot execute without deterministic gate (property test, EF-16); both max-prob and confidence supported (EF-02) | AI | DONE | [ARCH §6](ARCHITECTURE.md#6-model-interaction-and-orchestration-strategy), EF-02, EF-16, D24 |
+| PT-1.7 | Calibrators (isotonic/temperature/histogram) + metrics (ECE w/ noise floor, Brier, AUROC, coverage) | PT-1.5 | saturated-1.0 handled (epsilon-clip or histogram; temperature only if logits exist) (EF-13); refuses thin data (EF-14) | AI | DONE | T0.6, EF-13, EF-14, D24 |
+| PT-1.8 | Fallbacks (fault injection) + full-context reconstruction on fallback | PT-1.6 | fallback fires on 429/529/timeout/malformed/out-of-range; fallback rebuilds full context (EF-04); fallback rate logged | AI | DONE | [ARCH §9](ARCHITECTURE.md#9-error-handling-uncertainty-and-fallbacks), EF-04, D24 |
 | PT-2.0 | **Freeze G0 criteria** (precision target + DP4 "stuck" definition) | PT-1.8 | written, hash-pinned in the T0.8 pre-registration before any probe is scored | AI+You | TODO | EF-05, U3 |
 | PT-2.1 | Jev access + version pinning (= T0.1) | PT-2.0, touchpoint H1 | `model` field asserted; pricing/rate limits recorded; whether logits are exposed recorded (EF-13) | You+AI | TODO | T0.1, D10 |
 | PT-2.2 | JevEngine + LLMAdapterEngine | PT-2.1 | both pass engine contract tests | AI | TODO | D3 |
@@ -529,7 +529,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D23; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D24; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
@@ -551,3 +551,4 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 | 2026-09-27 | PT-0.9 done. Secrets are allow-listed by name; projections and logs fail closed on a registered value (D21). |
 | 2026-09-27 | PT-1.1 done. Append-only JSONL decision log. Milestone moves to M1 (D22). |
 | 2026-09-27 | PT-1.2 done. Replay hash ignores clocks, counters, and floats (D23). |
+| 2026-09-27 | PT-1.3 through PT-1.8 done. Offline core is in place (D24). Next task needs a human freeze, then an API key. |
