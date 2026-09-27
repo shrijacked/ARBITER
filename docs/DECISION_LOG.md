@@ -168,6 +168,7 @@ These rows amend the register after the user chose to build a product. They do *
 | D17 | 2026-09-27 | **Package name is `arbiter`** (import `arbiter`). Product name ARBITER: Agent Runtime for Bounded Inference, Triage, Evaluation & Routing. | Set before the package skeleton so examples, the CLI, and the learning book use one name. Resolves the name half of Q16. License and publishing stay at touchpoint H8. | **D15** (working name `decision-layer` / `decision_layer`). | Yes, before the first publish. |
 | D18 | 2026-09-27 | **`AGENTS.md` and `learning/` stay on this machine.** They are updated as tasks finish, including a local PDF rebuild, and they are never committed or pushed. | The user said they should never be pushed. The book remains the teaching record locally. | **D14** (master PDF tracked in git). | Yes. |
 | D19 | 2026-09-27 | **Remove `AGENTS.md` and `learning/`.** They are deleted, not kept locally, and not recreated. Definition of done is PLAN.md §14 only. | The user said to remove them. | **D14** and **D18**. | Yes. |
+| D20 | 2026-09-27 | **Touchpoint H3 is approved.** Toolchain is uv 0.12.19 and CPython 3.12.14. `make check` is ruff, mypy, and pytest, installed as a dev group because PT-0.8 requires them. No runtime dependencies. Package version stays `0.0.0` until PT-4.1. | The install was authorized before M0 coding. Dev tools are not product dependencies. | — | Yes, before PT-4.1 for the version. |
 
 ### 11.2 New open questions
 
@@ -207,3 +208,4 @@ These rows amend the register after the user chose to build a product. They do *
 | 2026-09-27 | Added D17: package name `arbiter` (import `arbiter`). Supersedes D15. Resolves Q16 for the install name. |
 | 2026-09-27 | Added D18: `AGENTS.md` and `learning/` are local only. Supersedes the tracked-PDF half of D14. |
 | 2026-09-27 | Added D19: `AGENTS.md` and `learning/` are removed. Supersedes D14 and D18. |
+| 2026-09-27 | Added D20: H3 approved. uv 0.12.19, CPython 3.12.14, dev group pytest/ruff/mypy. Package version 0.0.0. |

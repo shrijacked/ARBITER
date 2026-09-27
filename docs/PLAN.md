@@ -270,7 +270,7 @@ Legend: **Owner** = "AI" (me) or "You" (human touchpoint). **Status** = TODO / D
 | PT-0.5 | DECISION_LOG amendments | PT-0.4 | D11-D16, Q11-Q17, product risks, changelog | rows present in [DECISION_LOG.md](DECISION_LOG.md); dated 2026-09-27 | AI | DONE | D11-D16 |
 | PT-0.6 | Learning book + master PDF | PT-0.4 | `learning/` + `jev-learning-master.pdf` | clean Tectonic build; 58 pp; every page rendered + inspected; every figure has a data label; `make verify` = VERIFY OK | AI | DONE | LB-* |
 | PT-0.7 | AGENTS.md working agreement | PT-0.6 | `AGENTS.md` | definition-of-done incl. book update + PDF rebuild; error-message + secrets rules | AI | DONE | §14 |
-| PT-0.8 | Python 3.12 via uv + package skeleton | PT-0.7 | `pyproject`, src layout, pytest/ruff/mypy, `make check` | `make check` green on an empty skeleton | AI | TODO (needs touchpoint H3) | D13 |
+| PT-0.8 | Python 3.12 via uv + package skeleton | PT-0.7 | `pyproject`, src layout, pytest/ruff/mypy, `make check` | `make check` green on an empty skeleton | AI | DONE | D13, D20 |
 | PT-0.9 | Secrets policy | PT-0.8 | `.env.example`, redaction/allow-list rule | secret-smuggle test asserts no secret in any projection or log (EF-15) | AI | TODO | N3, EF-15 |
 
 ### 7.2 M1-M8 — milestone task list (research tasks carry their T-IDs)
@@ -421,7 +421,7 @@ Written as "touchpoint H1..H8" to avoid clashing with hypotheses H0-H5.
 |---|---|---|---|
 | H1 | Jev access (TypeSafe key or Vercel AI Gateway) | before M2 (request now) | PT-2.1 |
 | H2 | LLM API key(s) + monthly spend cap | before M2 | PT-2.2, Q11 |
-| H3 | OK to install `uv` (and Python 3.12) | M0.6 (PT-0.8) | PT-0.8 |
+| H3 | OK to install `uv` (and Python 3.12) | approved 2026-09-27 (D20) | PT-0.8 |
 | H4 | short session spot-checking probe labels | during M2 | PT-2.3/2.4 quality |
 | H5 | go/modify/stop call at G0, G1, G2 | each gate | PT-2.9, PT-5.6, PT-6.4 |
 | H6 | second labeler for 200-500 ambiguous decisions | during M5 | PT-5.3, Q13 |
@@ -547,3 +547,4 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 | 2026-09-27 | Adopted package name `arbiter` (import `arbiter`; product name ARBITER). Recorded as D17. Resolves Q16. Supersedes the D15 working name. |
 | 2026-09-27 | `AGENTS.md` and `learning/` are local only (D18). They are still updated as tasks finish, and they are not committed or pushed. |
 | 2026-09-27 | Removed `AGENTS.md` and `learning/` (D19). They are not recreated. Definition of done no longer includes them. |
+| 2026-09-27 | PT-0.8 done. Python 3.12.14 via uv 0.12.19; `make check` is ruff, mypy, and pytest (D20). |
