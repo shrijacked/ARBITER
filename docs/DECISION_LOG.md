@@ -170,6 +170,7 @@ These rows amend the register after the user chose to build a product. They do *
 | D19 | 2026-09-27 | **Remove `AGENTS.md` and `learning/`.** They are deleted, not kept locally, and not recreated. Definition of done is PLAN.md §14 only. | The user said to remove them. | **D14** and **D18**. | Yes. |
 | D20 | 2026-09-27 | **Touchpoint H3 is approved.** Toolchain is uv 0.12.19 and CPython 3.12.14. `make check` is ruff, mypy, and pytest, installed as a dev group because PT-0.8 requires them. No runtime dependencies. Package version stays `0.0.0` until PT-4.1. | The install was authorized before M0 coding. Dev tools are not product dependencies. | — | Yes, before PT-4.1 for the version. |
 | D21 | 2026-09-27 | **Secrets are an allow-list of names.** `.env.example` lists `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, and `TYPESAFE_API_KEY`. Projections and logs store a `SecretRef`. The executor injects the value at call time. A registered value in model-visible state fails closed, and the error does not echo the value. | Deny-list redaction misses copies (EF-15). No new dependency. | — | Yes, before the first host adapter. |
+| D22 | 2026-09-27 | **The decision log is append-only JSONL.** Each line has decision point, inputs hash, options, probabilities, confidence, choice, latency, cost, model version, and outcome. Outcome is written on the line, not patched later. A registered secret value is refused before the line is written. | Matches ARCHITECTURE §4.2. The content hash itself is PT-1.2. | — | Yes, before the replay cache. |
 
 ### 11.2 New open questions
 
@@ -211,3 +212,4 @@ These rows amend the register after the user chose to build a product. They do *
 | 2026-09-27 | Added D19: `AGENTS.md` and `learning/` are removed. Supersedes D14 and D18. |
 | 2026-09-27 | Added D20: H3 approved. uv 0.12.19, CPython 3.12.14, dev group pytest/ruff/mypy. Package version 0.0.0. |
 | 2026-09-27 | Added D21: secret allow-list by name. Projections and logs fail closed if a registered value appears. |
+| 2026-09-27 | Added D22: append-only JSONL decision log. Outcome is written once per line. |

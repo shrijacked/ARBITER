@@ -2,7 +2,7 @@
 
 **Status:** ACTIVE. This is the single operational source of truth for building the product. It stitches together the four research documents and turns them into a dated, trackable plan.
 
-**Last updated:** 2026-09-27. **Current milestone:** M0 (Foundations). **Next gate:** G0 (end of M2). **Plan start:** 2026-09-28.
+**Last updated:** 2026-09-27. **Current milestone:** M1 (Core SDK, offline). **Next gate:** G0 (end of M2). **Plan start:** 2026-09-28.
 
 **Companion documents (frozen research record):** [RESEARCH.md](RESEARCH.md) (evidence and research gate) · [ARCHITECTURE.md](ARCHITECTURE.md) (system design, decision points DP1-DP7) · [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) (phased research roadmap) · [DECISION_LOG.md](DECISION_LOG.md) (living register of decisions, assumptions, risks).
 
@@ -275,43 +275,43 @@ Legend: **Owner** = "AI" (me) or "You" (human touchpoint). **Status** = TODO / D
 
 ### 7.2 M1-M8 — milestone task list (research tasks carry their T-IDs)
 
-| ID | Task | Depends | Done-criteria | Owner | Traceability |
-|---|---|---|---|---|---|
-| PT-1.1 | Decision record + JSONL log | PT-0.8 | schema documented; round-trips; append-only | AI | [ARCH §4.2](ARCHITECTURE.md#42-component-responsibilities) |
-| PT-1.2 | Record/replay cache (= T0.2), content-hashed | PT-1.1 | hash excludes wall-clock/counters; cross-process stable under randomized `PYTHONHASHSEED` (EF-11) | AI | T0.2, EF-11 |
-| PT-1.3 | Typed decision-point spec (Choice/Score/Noul + contrastive criteria + mandatory "none/other") | PT-1.1 | 422-shaped questions rejected; "other" always present | AI | [ARCH §8](ARCHITECTURE.md#8-tool-interface-concepts) |
-| PT-1.4 | Projection builders (<=32k, deterministic, secret-free) | PT-1.3 | token budget never exceeded; identical output for identical state; secret-smuggle test passes | AI | [ARCH §7](ARCHITECTURE.md#7-state-and-memory-design), EF-03, EF-15 |
-| PT-1.5 | Engine protocol + fake/oracle/random engines | PT-1.3 | contract tests; "confidence unavailable" is a first-class return (EF-12) | AI | D3, EF-12 |
-| PT-1.6 | Policy table (both gating statistics; bands; authority classes; fail-closed) | PT-1.5 | band lookup total; side-effect path cannot execute without deterministic gate (property test, EF-16); both max-prob and confidence supported (EF-02) | AI | [ARCH §6](ARCHITECTURE.md#6-model-interaction-and-orchestration-strategy), EF-02, EF-16 |
-| PT-1.7 | Calibrators (isotonic/temperature/histogram) + metrics (ECE w/ noise floor, Brier, AUROC, coverage) | PT-1.5 | saturated-1.0 handled (epsilon-clip or histogram; temperature only if logits exist) (EF-13); refuses thin data (EF-14) | AI | T0.6, EF-13, EF-14 |
-| PT-1.8 | Fallbacks (fault injection) + full-context reconstruction on fallback | PT-1.6 | fallback fires on 429/529/timeout/malformed/out-of-range; fallback rebuilds full context (EF-04); fallback rate logged | AI | [ARCH §9](ARCHITECTURE.md#9-error-handling-uncertainty-and-fallbacks), EF-04 |
-| PT-2.0 | **Freeze G0 criteria** (precision target + DP4 "stuck" definition) | PT-1.8 | written, hash-pinned in the T0.8 pre-registration before any probe is scored | AI+You | EF-05, U3 |
-| PT-2.1 | Jev access + version pinning (= T0.1) | PT-2.0, touchpoint H1 | `model` field asserted; pricing/rate limits recorded; whether logits are exposed recorded (EF-13) | You+AI | T0.1, D10 |
-| PT-2.2 | JevEngine + LLMAdapterEngine | PT-2.1 | both pass engine contract tests | AI | D3 |
-| PT-2.3 | DP2 probe (= T0.3) | PT-2.2 | top-1/top-3, ECE, latency p50/p95 @ concurrency 1/4/8, reliability table | AI | T0.3, Q1 |
-| PT-2.4 | DP4 probe (= T0.4) | PT-2.2 | accuracy/ECE vs projection length (3/5/10 actions) | AI | T0.4, Q2 |
-| PT-2.5 | Wording/order sensitivity (= T0.5), incl. filtered-subset permutations | PT-2.3 | label-flip and probability-shift table; stable sort key validated (EF-06) | AI | T0.5, Q3, EF-06 |
-| PT-2.6 | Recalibration study (= T0.6); resolve gating statistic (U2) | PT-2.3, PT-2.4 | held-out ECE per statistic; U2 resolved | AI | T0.6, D4, U2 |
-| PT-2.7 | Benchmark selection (= T0.7); resolve U1 | PT-2.0 | decision recorded in DECISION_LOG | AI+You | T0.7, U1 |
-| PT-2.8 | Pre-registration (= T0.8) | PT-2.6, PT-2.7 | hash-pinned arms/metrics/thresholds/seeds | AI | T0.8, D6 |
-| PT-2.9 | **Gate G0 report** | PT-2.3..2.8 | go/modify/stop recommendation vs §8 criteria | AI->You | G0 |
-| PT-3.1 | Host framework decision (U4) | G0 | one framework chosen; recorded | AI+You | U4, Q12 |
-| PT-3.2 | Primary adapter (DP2 narrow + DP4 monitor hooks) | PT-3.1 | works on one example agent; fallback proven end-to-end | AI | [ARCH §4](ARCHITECTURE.md#4-recommended-architecture-decision-gated-llm-agent) |
-| PT-3.3 | CLI (`init`, `doctor`, `calibrate`, `eval`, `report`, `replay`) | PT-1.7, PT-3.2 | each has args/defaults per §7.4; `--help` states problem+cause+fix on errors (EF-DX3) | AI | §7.4 |
-| PT-3.4 | Offline quickstart + committed demo cache/sample log | PT-3.3 | one documented command runs from a committed synthetic cache, no API key, <5 min after prereqs; CI runs it (EF-DX1, EF-DX2) | AI | EF-DX1, EF-DX2 |
-| PT-4.1 | v0.1 packaging, README ("why / when not to use" + comparison table), examples (CI-executed) | PT-3.4 | build installs; examples pass in CI; no performance claims (EF-DX7, EF-DX8) | AI+You | touchpoint H8, EF-DX7 |
-| PT-5.1 | LLM-only trajectories (= T1.1), >=3 seeds | G0 | corpus + baseline pass^k + cost | AI | T1.1 |
-| PT-5.2 | Decision-point extraction (= T1.2) | PT-5.1 | DP2/DP4 instances with provenance | AI | T1.2 |
-| PT-5.3 | Human labeling (= T1.3), 2 labelers | PT-5.2, touchpoint H6 | 200-500 labels; inter-annotator agreement reported | You+AI | T1.3, Q13 |
-| PT-5.4 | Component comparison (= T1.4) | PT-5.2 | Jev / LLM-adapter / native / encoder / Laya / rules on the dataset | AI | T1.4, D3 |
-| PT-5.5 | Metrics + cascade sim + failure analysis (= T1.5-1.7) | PT-5.4 | tables w/ bootstrap CIs; escalation curves; error taxonomy | AI | T1.5-1.7 |
-| PT-5.6 | **Gate G1 report** | PT-5.5 | go/modify/stop vs §8 | AI->You | G1 |
-| PT-6.1 | Live hooks + completion verifier + experiment runner | G1 | arms runnable from config; cost accounting per call | AI | [ARCH §5](ARCHITECTURE.md#5-agent-lifecycle-and-data-flow) |
-| PT-6.2 | Run ARM-A0..A7, >=3 seeds, pre-registered analysis | PT-6.1, touchpoint H7 | all arms complete; drift guard active (EF-T3) | AI | §9, EF-T3 |
-| PT-6.3 | **Trajectory-checkpoint calibration** (deliverable B) | PT-6.2 | checkpoint ECE across runs, not just per-step | AI | [RESEARCH §10](RESEARCH.md#10-broader-research-opportunity), [IMPL §6.3](IMPLEMENTATION_PLAN.md#63-metrics-all-arms-all-seeds) |
-| PT-6.4 | **Gate G2 report** | PT-6.2, PT-6.3 | success vs §8; A1 vs A2/A5/A6 verdicts | AI->You | G2 |
-| PT-7.1 | v0.2 evidence release: results page (one-command reproduce) + evidence-backed defaults | G2 | `report` regenerates every table from cache with no API calls | AI+You | §8.3 IMPL, touchpoint H8 |
-| PT-8.x | Extensions: DP7 routing, DP5 triage, more adapters, browser track, paper | G2 | per-extension criteria (deferred) | AI+You | [IMPL §7](IMPLEMENTATION_PLAN.md#7-phase-3--extensions-optional-48-weeks) |
+| ID | Task | Depends | Done-criteria | Owner | Status | Traceability |
+|---|---|---|---|---|---|---|
+| PT-1.1 | Decision record + JSONL log | PT-0.8 | schema documented; round-trips; append-only | AI | DONE | [ARCH §4.2](ARCHITECTURE.md#42-component-responsibilities), D22 |
+| PT-1.2 | Record/replay cache (= T0.2), content-hashed | PT-1.1 | hash excludes wall-clock/counters; cross-process stable under randomized `PYTHONHASHSEED` (EF-11) | AI | TODO | T0.2, EF-11 |
+| PT-1.3 | Typed decision-point spec (Choice/Score/Noul + contrastive criteria + mandatory "none/other") | PT-1.1 | 422-shaped questions rejected; "other" always present | AI | TODO | [ARCH §8](ARCHITECTURE.md#8-tool-interface-concepts) |
+| PT-1.4 | Projection builders (<=32k, deterministic, secret-free) | PT-1.3 | token budget never exceeded; identical output for identical state; secret-smuggle test passes | AI | TODO | [ARCH §7](ARCHITECTURE.md#7-state-and-memory-design), EF-03, EF-15 |
+| PT-1.5 | Engine protocol + fake/oracle/random engines | PT-1.3 | contract tests; "confidence unavailable" is a first-class return (EF-12) | AI | TODO | D3, EF-12 |
+| PT-1.6 | Policy table (both gating statistics; bands; authority classes; fail-closed) | PT-1.5 | band lookup total; side-effect path cannot execute without deterministic gate (property test, EF-16); both max-prob and confidence supported (EF-02) | AI | TODO | [ARCH §6](ARCHITECTURE.md#6-model-interaction-and-orchestration-strategy), EF-02, EF-16 |
+| PT-1.7 | Calibrators (isotonic/temperature/histogram) + metrics (ECE w/ noise floor, Brier, AUROC, coverage) | PT-1.5 | saturated-1.0 handled (epsilon-clip or histogram; temperature only if logits exist) (EF-13); refuses thin data (EF-14) | AI | TODO | T0.6, EF-13, EF-14 |
+| PT-1.8 | Fallbacks (fault injection) + full-context reconstruction on fallback | PT-1.6 | fallback fires on 429/529/timeout/malformed/out-of-range; fallback rebuilds full context (EF-04); fallback rate logged | AI | TODO | [ARCH §9](ARCHITECTURE.md#9-error-handling-uncertainty-and-fallbacks), EF-04 |
+| PT-2.0 | **Freeze G0 criteria** (precision target + DP4 "stuck" definition) | PT-1.8 | written, hash-pinned in the T0.8 pre-registration before any probe is scored | AI+You | TODO | EF-05, U3 |
+| PT-2.1 | Jev access + version pinning (= T0.1) | PT-2.0, touchpoint H1 | `model` field asserted; pricing/rate limits recorded; whether logits are exposed recorded (EF-13) | You+AI | TODO | T0.1, D10 |
+| PT-2.2 | JevEngine + LLMAdapterEngine | PT-2.1 | both pass engine contract tests | AI | TODO | D3 |
+| PT-2.3 | DP2 probe (= T0.3) | PT-2.2 | top-1/top-3, ECE, latency p50/p95 @ concurrency 1/4/8, reliability table | AI | TODO | T0.3, Q1 |
+| PT-2.4 | DP4 probe (= T0.4) | PT-2.2 | accuracy/ECE vs projection length (3/5/10 actions) | AI | TODO | T0.4, Q2 |
+| PT-2.5 | Wording/order sensitivity (= T0.5), incl. filtered-subset permutations | PT-2.3 | label-flip and probability-shift table; stable sort key validated (EF-06) | AI | TODO | T0.5, Q3, EF-06 |
+| PT-2.6 | Recalibration study (= T0.6); resolve gating statistic (U2) | PT-2.3, PT-2.4 | held-out ECE per statistic; U2 resolved | AI | TODO | T0.6, D4, U2 |
+| PT-2.7 | Benchmark selection (= T0.7); resolve U1 | PT-2.0 | decision recorded in DECISION_LOG | AI+You | TODO | T0.7, U1 |
+| PT-2.8 | Pre-registration (= T0.8) | PT-2.6, PT-2.7 | hash-pinned arms/metrics/thresholds/seeds | AI | TODO | T0.8, D6 |
+| PT-2.9 | **Gate G0 report** | PT-2.3..2.8 | go/modify/stop recommendation vs §8 criteria | AI->You | TODO | G0 |
+| PT-3.1 | Host framework decision (U4) | G0 | one framework chosen; recorded | AI+You | TODO | U4, Q12 |
+| PT-3.2 | Primary adapter (DP2 narrow + DP4 monitor hooks) | PT-3.1 | works on one example agent; fallback proven end-to-end | AI | TODO | [ARCH §4](ARCHITECTURE.md#4-recommended-architecture-decision-gated-llm-agent) |
+| PT-3.3 | CLI (`init`, `doctor`, `calibrate`, `eval`, `report`, `replay`) | PT-1.7, PT-3.2 | each has args/defaults per §7.4; `--help` states problem+cause+fix on errors (EF-DX3) | AI | TODO | §7.4 |
+| PT-3.4 | Offline quickstart + committed demo cache/sample log | PT-3.3 | one documented command runs from a committed synthetic cache, no API key, <5 min after prereqs; CI runs it (EF-DX1, EF-DX2) | AI | TODO | EF-DX1, EF-DX2 |
+| PT-4.1 | v0.1 packaging, README ("why / when not to use" + comparison table), examples (CI-executed) | PT-3.4 | build installs; examples pass in CI; no performance claims (EF-DX7, EF-DX8) | AI+You | TODO | touchpoint H8, EF-DX7 |
+| PT-5.1 | LLM-only trajectories (= T1.1), >=3 seeds | G0 | corpus + baseline pass^k + cost | AI | TODO | T1.1 |
+| PT-5.2 | Decision-point extraction (= T1.2) | PT-5.1 | DP2/DP4 instances with provenance | AI | TODO | T1.2 |
+| PT-5.3 | Human labeling (= T1.3), 2 labelers | PT-5.2, touchpoint H6 | 200-500 labels; inter-annotator agreement reported | You+AI | TODO | T1.3, Q13 |
+| PT-5.4 | Component comparison (= T1.4) | PT-5.2 | Jev / LLM-adapter / native / encoder / Laya / rules on the dataset | AI | TODO | T1.4, D3 |
+| PT-5.5 | Metrics + cascade sim + failure analysis (= T1.5-1.7) | PT-5.4 | tables w/ bootstrap CIs; escalation curves; error taxonomy | AI | TODO | T1.5-1.7 |
+| PT-5.6 | **Gate G1 report** | PT-5.5 | go/modify/stop vs §8 | AI->You | TODO | G1 |
+| PT-6.1 | Live hooks + completion verifier + experiment runner | G1 | arms runnable from config; cost accounting per call | AI | TODO | [ARCH §5](ARCHITECTURE.md#5-agent-lifecycle-and-data-flow) |
+| PT-6.2 | Run ARM-A0..A7, >=3 seeds, pre-registered analysis | PT-6.1, touchpoint H7 | all arms complete; drift guard active (EF-T3) | AI | TODO | §9, EF-T3 |
+| PT-6.3 | **Trajectory-checkpoint calibration** (deliverable B) | PT-6.2 | checkpoint ECE across runs, not just per-step | AI | TODO | [RESEARCH §10](RESEARCH.md#10-broader-research-opportunity), [IMPL §6.3](IMPLEMENTATION_PLAN.md#63-metrics-all-arms-all-seeds) |
+| PT-6.4 | **Gate G2 report** | PT-6.2, PT-6.3 | success vs §8; A1 vs A2/A5/A6 verdicts | AI->You | TODO | G2 |
+| PT-7.1 | v0.2 evidence release: results page (one-command reproduce) + evidence-backed defaults | G2 | `report` regenerates every table from cache with no API calls | AI+You | TODO | §8.3 IMPL, touchpoint H8 |
+| PT-8.x | Extensions: DP7 routing, DP5 triage, more adapters, browser track, paper | G2 | per-extension criteria (deferred) | AI+You | TODO | [IMPL §7](IMPLEMENTATION_PLAN.md#7-phase-3--extensions-optional-48-weeks) |
 
 ### 7.3 Engineering findings from the plan review (must be honored; auto-decided via the 6 principles)
 
@@ -529,7 +529,7 @@ Nothing publishes a cost or reliability claim before the gate that produced it (
 
 ### 16.2 ID coverage (verification target for PT-0.4)
 
-PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D21; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
+PLAN.md references, at minimum: hypotheses H0-H5; assumptions ASM-A1..A7; decisions D1, D3, D4, D6, D8, D9, D10, D11-D22; open questions Q1-Q3, Q10, Q11-Q17; unresolved U1-U6; risks R1-R10 (via DECISION_LOG) + RISK-P1..P6; tasks T0.1-T0.8, T1.1-T1.7; arms ARM-A0..A7; gates G0-G2; decision points DP1-DP7; goals GOAL-1..6; non-goals N1-N5. See §14.
 
 ### 16.3 Plan review consensus (autoplan, subagent-only)
 
@@ -549,3 +549,4 @@ Three independent reviews were run against this plan and the design doc: CEO (st
 | 2026-09-27 | Removed `AGENTS.md` and `learning/` (D19). They are not recreated. Definition of done no longer includes them. |
 | 2026-09-27 | PT-0.8 done. Python 3.12.14 via uv 0.12.19; `make check` is ruff, mypy, and pytest (D20). |
 | 2026-09-27 | PT-0.9 done. Secrets are allow-listed by name; projections and logs fail closed on a registered value (D21). |
+| 2026-09-27 | PT-1.1 done. Append-only JSONL decision log. Milestone moves to M1 (D22). |
