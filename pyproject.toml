@@ -2,6 +2,7 @@
 name = "arbiter"
 version = "0.0.0"
 description = "Agent Runtime for Bounded Inference, Triage, Evaluation and Routing"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 
